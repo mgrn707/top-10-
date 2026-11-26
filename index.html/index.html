@@ -1,0 +1,4430 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>توب 10 — خمّن القائمة</title>
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+  --bg:#f8f5ef;
+  --card:#ffffff;
+  --tx:#1f2421;
+  --mut:#68706a;
+  --ac:#ea580c;
+  --ac2:#0f766e;
+  --ok:#16a34a;
+  --bad:#e11d48;
+  --bd:#e6dfd3;
+  --sh:0 6px 20px rgba(20,25,22,.06);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--tx);
+  font-family:"Segoe UI",Tahoma,"Noto Sans Arabic",system-ui,sans-serif;
+  line-height:1.6;
+  min-height:100vh;
+  transition:background .22s,color .22s;
+}
+body.site-dark{
+  color-scheme:dark;
+  --bg:#0f1311;
+  --card:#181e1b;
+  --tx:#f2f5f3;
+  --mut:#9aa59f;
+  --bd:#2a332e;
+  --sh:0 8px 24px rgba(0,0,0,.35);
+}
+body.theme-ocean{--ac:#0284c7;--ac2:#0d9488}
+body.theme-royal{--ac:#7c3aed;--ac2:#db2777}
+body.theme-emerald{--ac:#059669;--ac2:#0284c7}
+
+body.hide-hof .hof-bar{display:none}
+body.hide-sub .sub{display:none}
+body.no-sug .sug{display:none!important}
+body.no-toast #toast-box{display:none!important}
+body.grid-lg .nm{font-size:17.5px}
+body.grid-lg .rk{min-width:42px;height:42px;font-size:19px}
+body.grid-xl .nm{font-size:19.5px}
+body.grid-xl .rk{min-width:46px;height:46px;font-size:21px}
+body.single-col #out{grid-template-columns:1fr}
+body.compact-rows .row{min-height:48px;padding:7px 12px}
+body.reduced-motion *,body.reduced-motion *::before,body.reduced-motion *::after{
+  animation:none!important;
+  transition:none!important;
+}
+
+.wrap{max-width:1120px;margin:0 auto;padding:20px 18px 90px}
+
+/* الطبقة 1: الهيدر */
+.layer-header{margin-bottom:10px}
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:4px;
+}
+h1{
+  margin:0;
+  font-size:clamp(28px,6.5vw,42px);
+  font-weight:900;
+  color:var(--ac);
+  letter-spacing:-.5px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex-wrap:wrap;
+}
+.badge-pill{
+  font-size:12.5px;
+  font-weight:800;
+  background:color-mix(in srgb,var(--ac) 12%,transparent);
+  color:var(--ac);
+  padding:4px 11px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--ac) 25%,transparent);
+}
+.xp-pill{
+  font-size:12.5px;
+  font-weight:800;
+  background:color-mix(in srgb,var(--ac2) 12%,transparent);
+  color:var(--ac2);
+  padding:4px 11px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--ac2) 25%,transparent);
+}
+.rank-pill{
+  font-size:12.5px;
+  font-weight:800;
+  background:color-mix(in srgb,var(--ok) 12%,transparent);
+  color:var(--ok);
+  padding:4px 11px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--ok) 28%,transparent);
+}
+.sub{color:var(--mut);margin:0 0 8px;font-weight:600;font-size:15px}
+
+/* شريط اللاعب العام ولوحة الصدارة على اليسار بدون خلفية بيضاء زائدة */
+.public-strip{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  width:100%;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:4px 0 10px;
+  font-size:13px;
+  font-weight:800;
+}
+.public-player-inline{
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-inline-start:auto;
+}
+.public-tag{
+  background:color-mix(in srgb,var(--ac) 13%,transparent);
+  color:var(--ac);
+  padding:3px 10px;
+  border-radius:999px;
+  font-size:12.5px;
+  font-weight:900;
+}
+.public-mini-btn{
+  border:1px solid var(--bd);
+  background:transparent;
+  color:var(--tx);
+  border-radius:999px;
+  padding:4px 10px;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.14s;
+}
+.public-mini-btn:hover{border-color:var(--ac);color:var(--ac)}
+.public-mini-btn.lb{
+  background:color-mix(in srgb,var(--ac2) 12%,transparent);
+  border-color:color-mix(in srgb,var(--ac2) 30%,transparent);
+  color:var(--ac2);
+}
+
+.top-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ib{
+  background:var(--card);
+  border:1.5px solid var(--bd);
+  border-radius:14px;
+  padding:8px 12px;
+  cursor:pointer;
+  font-size:17px;
+  color:var(--tx);
+  box-shadow:var(--sh);
+  transition:.15s;
+}
+.ib:hover{transform:translateY(-1px);border-color:var(--ac)}
+.ib.off{opacity:.58}
+
+/* نافذة لوحة الصدارة العامة */
+.lb-ov{position:fixed;inset:0;z-index:9993;background:rgba(15,20,17,.55);display:none;align-items:center;justify-content:center;padding:14px}
+.lb-ov.open{display:flex}
+.lb-card{
+  width:min(460px,100%);
+  max-height:86vh;
+  overflow:auto;
+  background:var(--card);
+  border:2px solid var(--bd);
+  border-radius:22px;
+  padding:16px 18px;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+  animation:toastIn .22s;
+}
+.lb-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.lb-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1.5px solid var(--bd);
+  background:color-mix(in srgb,var(--bg) 55%,var(--card));
+  font-weight:800;
+  font-size:13.5px;
+}
+.lb-row.me{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 9%,var(--card))}
+
+/* نافذة إعدادات الموقع بالعرض مع تبويبات وخيارات متعددة */
+.site-set-ov{position:fixed;inset:0;z-index:9992;background:rgba(15,20,17,.55);display:none;align-items:center;justify-content:center;padding:14px}
+.site-set-ov.open{display:flex}
+.site-set-card{
+  width:min(780px,100%);
+  max-height:88vh;
+  overflow:auto;
+  background:var(--card);
+  border:2px solid var(--bd);
+  border-radius:24px;
+  padding:18px 20px;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+  animation:toastIn .22s;
+}
+.site-tabs-bar{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:14px;
+}
+@media(max-width:600px){
+  .site-tabs-bar{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.site-tab-btn{
+  border:1.5px solid var(--bd);
+  background:var(--bg);
+  color:var(--tx);
+  border-radius:13px;
+  padding:8px 10px;
+  font-size:13px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.14s;
+}
+.site-tab-btn.on{
+  background:var(--ac);
+  color:#fff;
+  border-color:var(--ac);
+}
+.site-pane{display:none}
+.site-pane.active{display:block}
+.site-cols-2{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+@media(max-width:640px){
+  .site-cols-2{grid-template-columns:1fr}
+}
+.site-box{
+  border:1.5px solid var(--bd);
+  border-radius:16px;
+  padding:12px 14px;
+  background:color-mix(in srgb,var(--bg) 55%,var(--card));
+}
+.site-set-lbl{display:block;font-size:13px;font-weight:800;margin-bottom:8px;color:var(--ac)}
+.site-theme-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.site-seg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.site-chip{border:1.5px solid var(--bd);background:var(--card);color:var(--tx);border-radius:11px;padding:7px 6px;font-size:12px;font-weight:800;cursor:pointer;transition:.12s}
+.site-chip.on{border-color:var(--ac);background:var(--ac);color:#fff}
+.site-sw{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;font-size:13px;font-weight:700;cursor:pointer;border-bottom:1px dashed color-mix(in srgb,var(--bd) 60%,transparent)}
+.site-sw:last-child{border-bottom:0}
+.site-act-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+@media(max-width:620px){
+  .site-act-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.site-btn-act{border:1.5px solid var(--bd);background:var(--card);color:var(--tx);border-radius:12px;padding:8px 10px;font-size:12.5px;font-weight:800;cursor:pointer;transition:.14s}
+.site-btn-act:hover{border-color:var(--ac);color:var(--ac)}
+.site-btn-act.danger{border-color:color-mix(in srgb,var(--bad) 45%,var(--bd));color:var(--bad)}
+.site-btn-act.danger:hover{background:var(--bad);color:#fff}
+.site-io-box{
+  width:100%;
+  min-height:66px;
+  margin-top:10px;
+  border:1.5px solid var(--bd);
+  border-radius:12px;
+  background:var(--card);
+  color:var(--tx);
+  padding:8px 10px;
+  font-family:monospace;
+  font-size:11.5px;
+  resize:vertical;
+}
+
+/* بطاقة استعانة بصديق المربعة (تايمر دقيقة + شعار الهاتف) */
+.friend-ov{position:fixed;inset:0;z-index:9994;background:rgba(15,20,17,.58);display:none;align-items:center;justify-content:center;padding:16px}
+.friend-ov.open{display:flex}
+.friend-box{
+  width:min(340px,100%);
+  background:var(--card);
+  border:2px solid var(--ac2);
+  border-radius:20px;
+  padding:20px 18px;
+  text-align:center;
+  box-shadow:0 24px 60px rgba(0,0,0,.36);
+  animation:toastIn .22s;
+}
+.friend-phone{
+  width:64px;
+  height:64px;
+  margin:0 auto 10px;
+  border-radius:18px;
+  display:grid;
+  place-items:center;
+  font-size:32px;
+  background:color-mix(in srgb,var(--ac2) 15%,transparent);
+  border:1.5px solid color-mix(in srgb,var(--ac2) 35%,transparent);
+  animation:phoneRing 1.2s ease-in-out infinite;
+}
+@keyframes phoneRing{
+  0%,100%{transform:rotate(0deg) scale(1)}
+  15%{transform:rotate(-10deg) scale(1.05)}
+  30%{transform:rotate(10deg) scale(1.05)}
+  45%{transform:rotate(-6deg)}
+  60%{transform:rotate(6deg)}
+}
+.friend-title{font-weight:900;font-size:17px;margin-bottom:4px}
+.friend-sub{font-size:13px;color:var(--mut);font-weight:700;margin-bottom:12px}
+.friend-clock{
+  font-size:34px;
+  font-weight:900;
+  color:var(--ac2);
+  direction:ltr;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+.friend-clock.urgent{color:var(--bad)}
+.friend-bar{
+  width:100%;
+  height:8px;
+  border-radius:999px;
+  background:color-mix(in srgb,var(--bd) 65%,transparent);
+  overflow:hidden;
+  margin-bottom:14px;
+}
+.friend-bar > i{
+  display:block;
+  height:100%;
+  width:100%;
+  background:linear-gradient(90deg,var(--ac2),var(--ac));
+  transition:width .95s linear;
+}
+.friend-btns{display:flex;gap:8px;flex-wrap:wrap}
+.friend-btns .btn{flex:1;min-width:120px;padding:10px 12px;font-size:14px}
+
+/* شريط الأرقام القياسية */
+.hof-bar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.hof-chip{
+  font-size:12.5px;
+  font-weight:800;
+  background:var(--card);
+  border:1.5px solid var(--bd);
+  color:var(--tx);
+  padding:5px 11px;
+  border-radius:999px;
+  box-shadow:var(--sh);
+}
+
+/* زر سهم يسار الشاشة للنزول إلى خانة البحث */
+.jump-down-btn{
+  position:fixed;
+  left:20px;
+  bottom:22px;
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  border:2px solid var(--bd);
+  background:var(--card);
+  color:var(--ac);
+  font-size:22px;
+  font-weight:900;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  z-index:9975;
+  box-shadow:0 10px 24px rgba(20,25,22,.18);
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(12px);
+  transition:opacity .2s,transform .2s,border-color .15s;
+}
+.jump-down-btn.show{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+.jump-down-btn:hover{
+  border-color:var(--ac);
+  transform:translateY(-2px);
+}
+
+/* تنبيه خفيف بنفس أسلوب الكرت في الصورة */
+.search-cue-banner{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  background:color-mix(in srgb,var(--ac) 9%,var(--card));
+  border:1px dashed color-mix(in srgb,var(--ac) 45%,var(--bd));
+  border-radius:14px;
+  padding:8px 12px;
+  margin-bottom:10px;
+  font-size:12.8px;
+  font-weight:700;
+}
+.search-cue-btn{
+  border:0;
+  background:var(--ac);
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+  padding:5px 12px;
+  border-radius:999px;
+  cursor:pointer;
+}
+
+/* الطبقة 2: التصنيفات */
+.layer-cats{
+  background:var(--card);
+  border:1.5px solid var(--bd);
+  border-radius:20px;
+  padding:12px 14px;
+  margin-bottom:12px;
+  box-shadow:var(--sh);
+}
+#tabs{margin-bottom:0}
+.tabs-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:8px;
+}
+.completed-counter{
+  font-size:13px;
+  font-weight:800;
+  color:var(--ac2);
+  background:color-mix(in srgb,var(--ac2) 11%,var(--card));
+  border:1px solid color-mix(in srgb,var(--ac2) 26%,var(--bd));
+  padding:4px 11px;
+  border-radius:999px;
+}
+.filter-group{display:inline-flex;gap:6px}
+.filter-btn{
+  border:1.5px solid var(--bd);
+  background:var(--card);
+  color:var(--tx);
+  font-size:12.5px;
+  font-weight:800;
+  padding:4px 11px;
+  border-radius:999px;
+  cursor:pointer;
+  transition:.15s;
+}
+.filter-btn.on{
+  background:var(--ac2);
+  color:#fff;
+  border-color:var(--ac2);
+}
+.create-tip-banner{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  background:color-mix(in srgb,var(--ac) 9%,var(--card));
+  border:1px dashed color-mix(in srgb,var(--ac) 45%,var(--bd));
+  border-radius:14px;
+  padding:8px 12px;
+  margin-bottom:10px;
+  font-size:12.8px;
+  font-weight:700;
+}
+.create-tip-btn{
+  border:0;
+  background:var(--ac);
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+  padding:5px 11px;
+  border-radius:999px;
+  cursor:pointer;
+  margin-inline-start:auto;
+}
+.gt{
+  font-weight:800;
+  color:var(--mut);
+  margin:12px 2px 7px;
+  font-size:13.5px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.gt:first-child{margin-top:2px}
+.cards{display:flex;flex-wrap:wrap;gap:7px}
+.custom-tab-wrap{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+.tab{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 13px;
+  border-radius:999px;
+  border:1.5px solid var(--bd);
+  background:var(--card);
+  color:var(--tx);
+  cursor:pointer;
+  font-size:13.5px;
+  font-weight:700;
+  transition:.15s;
+}
+.tab .ic{font-size:15px;line-height:1}
+.tab .done-mark{font-size:12px;line-height:1}
+.tab:hover{border-color:var(--ac);transform:translateY(-1px)}
+.tab.on{
+  background:var(--ac);
+  color:#fff;
+  border-color:var(--ac);
+  box-shadow:0 4px 12px color-mix(in srgb,var(--ac) 28%,transparent);
+}
+.del-cat-btn{
+  border:1.5px solid color-mix(in srgb,var(--bad) 35%,var(--bd));
+  background:var(--card);
+  color:var(--bad);
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  font-size:12px;
+  font-weight:900;
+  cursor:pointer;
+  display:inline-grid;
+  place-items:center;
+  transition:.15s;
+}
+.del-cat-btn:hover{
+  background:var(--bad);
+  color:#fff;
+}
+
+/* الطبقة 3: الأطوار المميزة */
+.layer-modes{
+  background:linear-gradient(135deg, color-mix(in srgb,var(--ac) 8%,var(--card)), color-mix(in srgb,var(--ac2) 8%,var(--card)));
+  border:2px solid color-mix(in srgb,var(--ac) 30%,var(--bd));
+  border-radius:22px;
+  padding:14px 16px;
+  margin-bottom:14px;
+  box-shadow:var(--sh);
+}
+.special-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.special-title{
+  font-size:15px;
+  font-weight:900;
+  color:var(--tx);
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.special-tag{
+  font-size:11.5px;
+  font-weight:800;
+  background:var(--ac);
+  color:#fff;
+  padding:2px 9px;
+  border-radius:999px;
+}
+.special-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+@media(max-width:920px){
+  .special-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+  .special-grid{grid-template-columns:1fr}
+}
+.mode-card{
+  text-align:start;
+  background:var(--card);
+  border:1.8px solid var(--bd);
+  border-radius:16px;
+  padding:11px 13px;
+  cursor:pointer;
+  color:var(--tx);
+  transition:.18s;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  box-shadow:var(--sh);
+}
+.mode-card:hover{
+  transform:translateY(-2px);
+  border-color:var(--ac);
+}
+.mode-card.active{
+  border-color:var(--ac);
+  background:color-mix(in srgb,var(--ac) 12%,var(--card));
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 18%,transparent);
+}
+.mode-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:6px;
+  font-weight:900;
+  font-size:15px;
+}
+.mode-badge{
+  font-size:11px;
+  font-weight:800;
+  padding:2px 8px;
+  border-radius:999px;
+  background:color-mix(in srgb,var(--ac2) 14%,transparent);
+  color:var(--ac2);
+}
+.mode-card.active .mode-badge{
+  background:var(--ac);
+  color:#fff;
+}
+.mode-desc{
+  font-size:12.5px;
+  color:var(--mut);
+  font-weight:600;
+}
+
+/* الطبقة 4: لوحة اللعب الجماعي */
+.layer-arena{margin-bottom:12px}
+.multi-panel{
+  display:none;
+  background:var(--card);
+  border:2px solid color-mix(in srgb,var(--ac2) 35%,var(--bd));
+  border-radius:20px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:var(--sh);
+}
+.multi-panel.active{display:block}
+.multi-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:10px;
+}
+.round-badge{
+  font-size:12.5px;
+  font-weight:900;
+  background:color-mix(in srgb,var(--ac) 14%,transparent);
+  color:var(--ac);
+  border:1px solid color-mix(in srgb,var(--ac) 30%,transparent);
+  padding:4px 12px;
+  border-radius:999px;
+}
+.players-scores{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:10px;
+}
+@media(max-width:640px){
+  .players-scores{grid-template-columns:1fr}
+}
+.p-card{
+  border:1.8px solid var(--bd);
+  border-radius:16px;
+  padding:10px 13px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  font-weight:800;
+  transition:.2s;
+  background:var(--card);
+}
+.p-card.turn{
+  border-color:var(--ac);
+  background:color-mix(in srgb,var(--ac) 10%,var(--card));
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 15%,transparent);
+}
+.p-meta{display:flex;flex-direction:column;gap:2px}
+.p-wins{font-size:11.5px;color:var(--mut);font-weight:700}
+.p-score{
+  background:color-mix(in srgb,var(--ac2) 15%,transparent);
+  color:var(--ac2);
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:13.5px;
+  white-space:nowrap;
+}
+.multi-actions-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  padding-top:8px;
+  border-top:1px dashed var(--bd);
+}
+.powerups-group,.friend-group{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.pwr-btn{
+  border:1.5px solid var(--bd);
+  background:var(--card);
+  color:var(--tx);
+  font-size:12.5px;
+  font-weight:800;
+  padding:6px 11px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:.15s;
+}
+.pwr-btn:hover:not(:disabled){
+  border-color:var(--ac);
+  transform:translateY(-1px);
+}
+.pwr-btn.armed{
+  background:var(--ac);
+  color:#fff;
+  border-color:var(--ac);
+}
+.pwr-btn:disabled{
+  opacity:.42;
+  cursor:not-allowed;
+}
+.bomb-tag{
+  font-size:13px;
+  font-weight:900;
+  color:var(--ac);
+  background:color-mix(in srgb,var(--ac) 12%,transparent);
+  padding:4px 10px;
+  border-radius:999px;
+}
+.bomb-tag.boom{color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,transparent)}
+.multi-controls{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.multi-controls input{
+  width:120px;
+  padding:7px 10px;
+  border-radius:11px;
+  border:1.5px solid var(--bd);
+  background:var(--card);
+  color:var(--tx);
+  font-weight:700;
+  font-size:13px;
+}
+
+/* ===== ساحة اللعب الجماعي (.mv) ===== */
+#multi-panel{padding:14px}
+#multi-panel>.multi-top,#multi-panel>.players-scores,#multi-panel>.multi-actions-row{display:none}
+.mv{display:flex;flex-direction:column;gap:12px}
+.mv-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.mv-round{display:flex;align-items:center;gap:9px;font-weight:900;font-size:14px;flex-wrap:wrap}
+.mv-pips{display:inline-flex;gap:5px}
+.mv-pips i{width:26px;height:8px;border-radius:99px;background:color-mix(in srgb,var(--bd) 85%,transparent)}
+.mv-pips i.done{background:var(--ac2)}
+.mv-pips i.now{background:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 22%,transparent)}
+.mv-tools{display:flex;gap:6px;flex-wrap:wrap}
+.mv-tool{border:1.5px solid var(--bd);background:var(--card);color:var(--tx);border-radius:12px;padding:6px 11px;font-size:12.5px;font-weight:800;cursor:pointer;transition:.15s}
+.mv-tool:hover{border-color:var(--ac);color:var(--ac)}
+.mv-tool.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.mv-names{display:none;padding:10px;border:1.5px dashed var(--bd);border-radius:14px;background:color-mix(in srgb,var(--bg) 60%,var(--card))}
+.mv-names.open{display:block}
+.mv-vs{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch}
+.mv-pl{--c:var(--ac);position:relative;border:2px solid var(--bd);border-radius:20px;padding:12px 10px 14px;background:var(--card);display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;opacity:.78;transition:.25s}
+.mv-pl.p1{--c:var(--ac2)}
+.mv-pl.turn{opacity:1;border-color:var(--c);background:linear-gradient(180deg,color-mix(in srgb,var(--c) 12%,var(--card)),var(--card));box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 18%,transparent),var(--sh);transform:translateY(-2px)}
+.mv-pl.in{animation:mvIn .45s}
+@keyframes mvIn{0%{transform:scale(.95)}60%{transform:scale(1.03) translateY(-2px)}100%{transform:translateY(-2px)}}
+.mv-av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:21px;background:var(--c);color:#fff}
+.mv-nm{font-weight:900;font-size:16px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mv-star{font-size:15px;letter-spacing:2px;min-height:20px}
+.mv-sc{font-size:clamp(34px,7vw,48px);font-weight:900;color:var(--c);line-height:1;direction:ltr}
+.mv-sc small{font-size:12px;color:var(--mut);margin-inline-start:4px}
+.mv-badge{min-height:22px;font-size:12px;font-weight:900;color:#fff;background:var(--c);padding:2px 12px;border-radius:99px;visibility:hidden}
+.mv-pl.turn .mv-badge{visibility:visible;animation:mvPulse 1.2s infinite}
+@keyframes mvPulse{50%{transform:scale(1.07)}}
+.mv-my{display:flex;gap:7px;font-size:13px}
+.mv-my .z{opacity:.3;filter:grayscale(1)}
+.mv-bb{width:100%;height:6px;border-radius:99px;background:color-mix(in srgb,var(--bd) 80%,transparent);overflow:hidden;display:none}
+.mv-bb.on{display:block}
+.mv-bb i{display:block;height:100%;background:var(--c);transition:width .9s linear}
+.mv-bb.hot i{background:var(--bad)}
+.mv-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:64px}
+.mv-vsb{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:15px;color:#fff;background:linear-gradient(135deg,var(--ac),var(--ac2));box-shadow:var(--sh)}
+.mv-lives{font-size:13px;letter-spacing:1px;text-align:center;line-height:1.3}
+.mv-lives small{display:block;font-size:10px;color:var(--mut);font-weight:800;letter-spacing:0}
+.mv-tug{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--bd)}
+.mv-tug i{display:block;height:100%;transition:width .5s}
+.mv-tug .a{background:var(--ac)}.mv-tug .b{background:var(--ac2)}
+.mv-pwh{font-weight:900;font-size:13px;color:var(--mut)}
+.mv-pw{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mv-pb{position:relative;border:1.8px solid var(--bd);background:var(--card);color:var(--tx);border-radius:16px;padding:12px 8px 16px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;transition:.15s;box-shadow:var(--sh);font-family:inherit}
+.mv-pb:hover:not(:disabled){transform:translateY(-2px);border-color:var(--ac)}
+.mv-pb .ic{font-size:24px;line-height:1.2}
+.mv-pb b{font-size:13px}
+.mv-pb small{font-size:11px;color:var(--mut);font-weight:700;line-height:1.4}
+.mv-pb .n{position:absolute;top:6px;inset-inline-start:8px;font-size:11px;font-weight:900;background:color-mix(in srgb,var(--ac2) 15%,transparent);color:var(--ac2);padding:1px 7px;border-radius:99px}
+.mv-pb .k{position:absolute;bottom:4px;inset-inline-end:8px;font-size:10px;color:var(--mut);font-weight:800;direction:ltr}
+.mv-pb:disabled{opacity:.4;cursor:not-allowed}
+.mv-pb.armed{background:var(--ac);color:#fff;border-color:var(--ac)}
+.mv-pb.armed small,.mv-pb.armed .k{color:#fff}
+.mv-pb.armed .n{background:#fff;color:var(--ac)}
+.mv-feed{display:flex;flex-direction:column;gap:5px}
+.mv-ev{font-size:12.5px;font-weight:700;padding:6px 10px;border-radius:10px;background:color-mix(in srgb,var(--bg) 60%,var(--card));border-inline-start:4px solid var(--ac2);animation:toastIn .25s}
+.mv-ev.good{border-color:var(--ok)}.mv-ev.bad{border-color:var(--bad)}
+.mv-res{border:2px solid var(--ac);border-radius:18px;padding:12px 14px;text-align:center;background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 10%,var(--card)),color-mix(in srgb,var(--ac2) 10%,var(--card)))}
+.mv-res h4{margin:0 0 4px;font-size:17px}
+.mv-res .btn{width:100%;margin-top:10px;flex:none}
+.mv-fl{position:absolute;top:8px;left:50%;font-weight:900;font-size:20px;pointer-events:none;animation:mvUp 1s ease forwards}
+.mv-fl.up{color:var(--ok)}.mv-fl.dn{color:var(--bad)}
+@keyframes mvUp{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-38px)}}
+@media(max-width:640px){
+  .mv-vs{grid-template-columns:1fr 54px 1fr;gap:6px}
+  .mv-mid{min-width:0}.mv-vsb{width:38px;height:38px;font-size:12px}
+  .mv-av{width:38px;height:38px;font-size:17px}
+  .mv-pb small{display:none}.mv-pb{padding:10px 6px 16px}
+}
+
+/* بانر تحدي السباق ضد الوقت */
+.rush-banner{
+  display:none;
+  background:var(--card);
+  border:1.5px solid color-mix(in srgb,var(--ac) 45%,var(--bd));
+  border-radius:18px;
+  padding:11px 15px;
+  margin-bottom:12px;
+  box-shadow:var(--sh);
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.rush-banner.active{display:flex}
+.rush-clock{
+  font-size:20px;
+  font-weight:900;
+  color:var(--ac);
+  direction:ltr;
+}
+.rush-clock.danger{color:var(--bad)}
+
+/* الطبقة 5: اللعب والبحث والنتائج */
+.layer-play{margin-top:4px}
+.progress-wrap{
+  background:var(--card);
+  border:1.5px solid var(--bd);
+  border-radius:16px;
+  padding:10px 14px;
+  margin-bottom:12px;
+  box-shadow:var(--sh);
+}
+.progress-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:7px;
+  font-size:13.5px;
+  font-weight:800;
+}
+.progress-track{
+  width:100%;
+  height:9px;
+  border-radius:999px;
+  background:color-mix(in srgb,var(--bd) 65%,transparent);
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--ac2),var(--ok));
+  transition:width .35s cubic-bezier(.22,1,.36,1);
+}
+
+.bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:6px 2px 10px;
+  font-weight:800;
+  font-size:16px;
+}
+.stats-left{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.streak-chip{
+  background:color-mix(in srgb,var(--ac) 11%,transparent);
+  color:var(--ac);
+  border:1px solid color-mix(in srgb,var(--ac) 24%,transparent);
+  padding:3px 10px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+}
+.timer-chip{
+  background:color-mix(in srgb,var(--ac2) 11%,transparent);
+  color:var(--ac2);
+  border:1px solid color-mix(in srgb,var(--ac2) 26%,transparent);
+  padding:3px 10px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+  cursor:pointer;
+}
+.hearts{font-size:17px;letter-spacing:1px;display:inline-block}
+.hearts.pulse{animation:hpPulse .38s ease}
+@keyframes hpPulse{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.16) rotate(-2deg)}
+  100%{transform:scale(1)}
+}
+
+/* خانة بحث مطورة */
+.sbox{position:relative;margin-bottom:12px}
+.sbox-inner{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:6px 14px 6px 8px;
+  border-radius:18px;
+  border:2px solid var(--bd);
+  background:var(--card);
+  box-shadow:0 8px 24px rgba(20,25,22,.07);
+  transition:.18s;
+}
+.sbox-inner:focus-within{
+  border-color:var(--ac);
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 15%,transparent), 0 10px 26px rgba(20,25,22,.1);
+}
+.sbox-inner.shake{animation:sh .4s}
+.s-icon{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:color-mix(in srgb,var(--ac) 12%,transparent);
+  color:var(--ac);
+  font-size:18px;
+  flex-shrink:0;
+}
+.sbox input{
+  flex:1;
+  min-width:0;
+  border:0;
+  background:transparent;
+  color:var(--tx);
+  font-size:16.5px;
+  font-weight:700;
+  padding:10px 4px;
+  outline:none;
+}
+.sbox input::placeholder{color:var(--mut);font-weight:600;font-size:15px}
+.s-clear{
+  border:0;
+  background:color-mix(in srgb,var(--mut) 14%,transparent);
+  color:var(--tx);
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  font-weight:900;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  font-size:14px;
+  flex-shrink:0;
+  transition:.12s;
+}
+.s-clear:hover{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.s-clear[hidden]{display:none}
+@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+.sug{
+  position:absolute;
+  inset-inline:0;
+  top:calc(100% + 7px);
+  z-index:30;
+  background:var(--card);
+  border:1.5px solid var(--bd);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 16px 36px rgba(20,25,22,.16);
+}
+.sug button{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  text-align:start;
+  padding:12px 16px;
+  border:0;
+  border-bottom:1px solid var(--bd);
+  background:none;
+  color:var(--tx);
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.12s;
+}
+.sug button mark{
+  background:color-mix(in srgb,var(--ac) 20%,transparent);
+  color:var(--ac);
+  border-radius:5px;
+  padding:0 2px;
+  font-weight:900;
+}
+.sug button span{
+  color:var(--ac);
+  background:color-mix(in srgb,var(--ac) 11%,transparent);
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap;
+}
+bdi{unicode-bidi:isolate}
+.sug button:last-child{border:0}
+.sug button:hover{background:color-mix(in srgb,var(--ac) 9%,var(--card))}
+
+#out{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px}
+.row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:var(--card);
+  border:1.5px solid var(--bd);
+  border-radius:16px;
+  padding:10px 14px;
+  margin:0;
+  min-height:60px;
+  box-shadow:var(--sh);
+  transition:.2s;
+}
+.row.top3 .rk{
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--ac) 30%,transparent);
+}
+.rk{
+  min-width:38px;
+  height:38px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+  font-size:18px;
+  background:color-mix(in srgb,var(--ac) 13%,transparent);
+  color:var(--ac);
+}
+.nm{flex:1;font-weight:700;font-size:16px;color:var(--mut)}
+.nm small{color:var(--mut);font-weight:600}
+.clue-box{
+  display:block;
+  font-size:13px;
+  color:var(--ac2);
+  font-weight:700;
+  margin-top:2px;
+}
+.peek-tag{
+  display:inline-block;
+  margin-right:6px;
+  font-size:12px;
+  color:var(--ac);
+  background:color-mix(in srgb,var(--ac) 11%,transparent);
+  padding:1px 7px;
+  border-radius:999px;
+  font-weight:800;
+}
+.blank-slot{opacity:.3;letter-spacing:3px;font-size:13px;user-select:none}
+
+@media(max-width:560px){
+  .wrap{padding:16px 12px 70px}
+  #out{grid-template-columns:1fr;gap:8px}
+  .row{min-height:54px}
+}
+.row.hit{
+  border-color:var(--ok);
+  background:linear-gradient(to left, var(--card), color-mix(in srgb,var(--ok) 10%,var(--card)));
+  animation:pop .4s;
+}
+.row.hit .nm{color:var(--tx)}
+.row.hit .rk{background:var(--ok);color:#fff}
+.row.miss{border-color:color-mix(in srgb,var(--bad) 45%,var(--bd))}
+.row.miss .nm{color:var(--bad)}
+.row.miss .rk{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+@keyframes pop{0%{transform:scale(.95)}60%{transform:scale(1.03)}100%{transform:none}}
+
+.val{direction:ltr;font-weight:800;white-space:nowrap;text-align:left}
+.val small{display:block;color:var(--mut);font-weight:600;font-size:12px}
+.msg{min-height:26px;margin:2px 2px 10px;font-weight:800;font-size:15px;color:var(--ac2)}
+
+.btns{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn{
+  flex:1;
+  min-width:125px;
+  padding:13px 14px;
+  border-radius:15px;
+  border:0;
+  font-size:15.5px;
+  font-weight:800;
+  cursor:pointer;
+  background:var(--ac);
+  color:#fff;
+  box-shadow:0 6px 16px color-mix(in srgb,var(--ac) 28%,transparent);
+  transition:.15s;
+}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
+.btn.g{background:var(--card);color:var(--tx);border:1.5px solid var(--bd);box-shadow:var(--sh)}
+.btn.h{background:color-mix(in srgb,var(--ac2) 12%,var(--card));color:var(--ac2);border:1.5px solid color-mix(in srgb,var(--ac2) 30%,var(--bd));box-shadow:var(--sh)}
+.btn.r{background:color-mix(in srgb,var(--ac) 13%,var(--card));color:var(--ac);border:1.5px solid color-mix(in srgb,var(--ac) 32%,var(--bd));box-shadow:var(--sh)}
+
+.src{color:var(--mut);font-size:12px;margin-top:16px;font-weight:600}
+.src a{color:var(--ac2)}
+
+/* إشعارات */
+#toast-box{
+  position:fixed;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:9999;
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  width:min(430px, calc(100vw - 24px));
+  pointer-events:none;
+}
+.toast{
+  pointer-events:auto;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  background:var(--card);
+  color:var(--tx);
+  border:1.5px solid var(--bd);
+  border-right:5px solid var(--ac);
+  border-radius:16px;
+  padding:11px 15px;
+  box-shadow:0 12px 28px rgba(20,25,22,.14);
+  font-weight:700;
+  font-size:14px;
+  animation:toastIn .3s cubic-bezier(.22,1,.36,1);
+}
+.toast.ok{border-right-color:var(--ok);border-color:color-mix(in srgb,var(--ok) 35%,var(--bd))}
+.toast.bad{border-right-color:var(--bad);border-color:color-mix(in srgb,var(--bad) 35%,var(--bd))}
+.toast.info{border-right-color:var(--ac2);border-color:color-mix(in srgb,var(--ac2) 30%,var(--bd))}
+.toast .t-ic{font-size:20px;line-height:1;flex-shrink:0}
+.toast .t-txt{flex:1}
+.toast .t-txt small{display:block;color:var(--mut);font-weight:600;font-size:12px;margin-top:1px}
+.toast.hide-toast{animation:toastOut .26s ease forwards}
+
+@keyframes toastIn{
+  from{opacity:0;transform:translateY(-14px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes toastOut{
+  to{opacity:0;transform:translateY(-12px) scale(.97)}
+}
+
+/* المساعد الذكي العائم (يمين الشاشة) */
+.ai-fab{
+  position:fixed;
+  right:20px;
+  bottom:22px;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  border:2px solid #fff;
+  background:linear-gradient(135deg, var(--ac), var(--ac2));
+  color:#fff;
+  font-size:26px;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  z-index:9980;
+  box-shadow:0 10px 26px rgba(20,25,22,.22);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.ai-fab:hover{
+  transform:scale(1.08);
+  box-shadow:0 14px 32px rgba(20,25,22,.28);
+}
+.ai-drawer{
+  position:fixed;
+  right:20px;
+  bottom:90px;
+  width:min(400px, calc(100vw - 32px));
+  max-height:76vh;
+  background:var(--card);
+  border:2px solid var(--bd);
+  border-radius:22px;
+  box-shadow:0 18px 44px rgba(20,25,22,.22);
+  z-index:9985;
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+}
+.ai-drawer.open{display:flex}
+.ai-head{
+  padding:12px 15px;
+  background:linear-gradient(135deg, color-mix(in srgb,var(--ac) 14%,var(--card)), color-mix(in srgb,var(--ac2) 14%,var(--card)));
+  border-bottom:1.5px solid var(--bd);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:900;
+  font-size:14.5px;
+}
+.ai-close{
+  border:0;
+  background:transparent;
+  color:var(--tx);
+  font-size:17px;
+  font-weight:900;
+  cursor:pointer;
+  padding:2px 6px;
+}
+.ai-quick{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  padding:9px 12px;
+  border-bottom:1px solid var(--bd);
+  background:color-mix(in srgb,var(--bg) 60%,var(--card));
+}
+.ai-qbtn{
+  border:1px solid var(--bd);
+  background:var(--card);
+  color:var(--tx);
+  font-size:11.5px;
+  font-weight:800;
+  padding:4px 9px;
+  border-radius:999px;
+  cursor:pointer;
+}
+.ai-qbtn:hover{border-color:var(--ac);color:var(--ac)}
+.ai-msgs{
+  padding:12px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  min-height:210px;
+  max-height:340px;
+}
+.ai-msg{
+  padding:9px 12px;
+  border-radius:14px;
+  font-size:13px;
+  font-weight:600;
+  line-height:1.58;
+  max-width:94%;
+}
+.ai-msg.bot{
+  align-self:flex-start;
+  background:color-mix(in srgb,var(--ac2) 11%,var(--card));
+  border:1px solid color-mix(in srgb,var(--ac2) 24%,var(--bd));
+  color:var(--tx);
+}
+.ai-msg.usr{
+  align-self:flex-end;
+  background:var(--ac);
+  color:#fff;
+}
+.ai-del-inline{
+  margin-top:6px;
+  border:1px solid color-mix(in srgb,var(--bad) 40%,transparent);
+  background:color-mix(in srgb,var(--bad) 10%,transparent);
+  color:var(--bad);
+  font-size:11.5px;
+  font-weight:800;
+  padding:3px 9px;
+  border-radius:999px;
+  cursor:pointer;
+}
+.ai-del-inline:hover{background:var(--bad);color:#fff}
+.ai-input-row{
+  display:flex;
+  gap:6px;
+  padding:9px 10px;
+  border-top:1.5px solid var(--bd);
+  background:var(--card);
+}
+.ai-input-row input{
+  flex:1;
+  border:1.5px solid var(--bd);
+  border-radius:12px;
+  padding:8px 10px;
+  font-size:13px;
+  font-weight:700;
+  background:var(--bg);
+  color:var(--tx);
+  outline:none;
+}
+.ai-input-row input:focus{border-color:var(--ac)}
+.ai-send{
+  border:0;
+  background:var(--ac);
+  color:#fff;
+  border-radius:12px;
+  padding:0 13px;
+  font-weight:800;
+  font-size:13px;
+  cursor:pointer;
+}
+
+/* إضافة التحدي اليومي */
+.dly-ov{position:fixed;inset:0;z-index:9990;background:rgba(20,25,22,.45);display:none;align-items:center;justify-content:center;padding:14px}
+.dly-ov.open{display:flex}
+.dly-card{width:min(440px,100%);max-height:90vh;overflow:auto;background:var(--card);border:2px solid var(--bd);border-radius:24px;padding:16px;box-shadow:0 24px 60px rgba(20,25,22,.3);animation:toastIn .25s}
+.dly-h{display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:17px;margin-bottom:12px}
+.dly-x{border:0;background:transparent;font-size:18px;font-weight:900;cursor:pointer;color:var(--tx)}
+.dly-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.dly-tile{background:color-mix(in srgb,var(--ac) 8%,var(--card));border:1.5px solid var(--bd);border-radius:16px;padding:10px 6px;text-align:center}
+.dly-tile b{display:block;font-size:20px}
+.dly-tile small{color:var(--mut);font-weight:700;font-size:11.5px}
+.dly-main{border:2px solid color-mix(in srgb,var(--ac) 40%,var(--bd));background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 9%,var(--card)),color-mix(in srgb,var(--ac2) 9%,var(--card)));border-radius:18px;padding:12px 14px;margin-bottom:12px;font-weight:800}
+.dly-main .btn{width:100%;margin-top:8px}
+.dly-grid{font-size:20px;letter-spacing:2px;margin-top:6px;word-break:break-all}
+.dly-ms{display:flex;flex-direction:column;gap:8px}
+.dly-m{border:1.5px solid var(--bd);border-radius:14px;padding:8px 12px;font-weight:800;font-size:13.5px}
+.dly-m .tr{height:7px;border-radius:999px;background:color-mix(in srgb,var(--bd) 70%,transparent);overflow:hidden;margin-top:6px}
+.dly-m .tr i{display:block;height:100%;background:linear-gradient(90deg,var(--ac2),var(--ok));border-radius:999px}
+.dly-m.done{border-color:var(--ok)}
+.dly-cd{text-align:center;color:var(--mut);font-weight:800;font-size:13px;margin-top:12px}
+#dly-open{position:relative}
+.dly-dot{position:absolute;top:-3px;right:-3px;width:11px;height:11px;border-radius:50%;background:var(--bad);border:2px solid var(--card)}
+
+/* تنسيق كود AI المطور ولوحة الترس ⚙️ */
+.ai-drawer{width:min(460px,calc(100vw - 24px));height:min(640px,82vh);max-height:none;border-radius:24px;bottom:88px}
+.ai-head{padding:12px 14px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border:0}
+.ai-title{display:flex;flex-direction:column;line-height:1.25;font-size:15px}
+.ai-title small{font-size:11.5px;font-weight:700;opacity:.92}
+.ai-gear,.ai-head .ai-close{background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:10px;width:32px;height:32px;cursor:pointer;font-size:15px;margin-inline-start:6px;padding:0}
+.ai-key{padding:10px 12px;background:color-mix(in srgb,var(--ac) 7%,var(--card));border-bottom:1px solid var(--bd);font-size:12.5px;font-weight:700}
+.ai-key[hidden]{display:none}
+.ai-key-row{display:flex;gap:6px;margin:6px 0}
+.ai-key-row input{flex:1;min-width:0;border:1.5px solid var(--bd);border-radius:10px;padding:7px 10px;direction:ltr;background:var(--card);color:var(--tx)}
+.ai-key-row button{border:0;border-radius:10px;padding:0 12px;font-weight:800;cursor:pointer;background:var(--ac);color:#fff}
+.ai-key-row button.d{background:var(--card);color:var(--bad);border:1.5px solid var(--bd)}
+
+.ai-gear-sec{margin-top:10px;padding-top:10px;border-top:1px dashed var(--bd)}
+.ai-gear-lbl{display:block;font-size:12px;font-weight:800;margin-bottom:6px;color:var(--tx)}
+.ai-bg-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.ai-chip-btn{border:1.5px solid var(--bd);background:var(--card);color:var(--tx);border-radius:9px;padding:5px 4px;font-size:11px;font-weight:800;cursor:pointer;transition:.12s}
+.ai-chip-btn.on{border-color:var(--ac);background:var(--ac);color:#fff}
+.ai-font-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ai-sw-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 0;font-size:12px;font-weight:700;cursor:pointer}
+.ai-gear-foot{display:flex;gap:6px;margin-top:8px}
+.ai-mini-act{flex:1;border:1.5px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:6px 8px;font-size:11.5px;font-weight:800;cursor:pointer}
+.ai-mini-act:hover{border-color:var(--ac);color:var(--ac)}
+
+.ai-msgs{flex:1;min-height:0;max-height:none;padding:14px;gap:10px;background:color-mix(in srgb,var(--bg) 70%,var(--card));transition:background .2s}
+.ai-msgs.ai-bg-warm{background:linear-gradient(165deg,color-mix(in srgb,var(--ac) 13%,var(--card)),color-mix(in srgb,#f59e0b 10%,var(--card)))!important}
+.ai-msgs.ai-bg-mint{background:linear-gradient(165deg,color-mix(in srgb,var(--ac2) 15%,var(--card)),color-mix(in srgb,var(--bg) 80%,var(--card)))!important}
+.ai-msgs.ai-bg-dots{background-color:var(--card)!important;background-image:radial-gradient(color-mix(in srgb,var(--tx) 15%,transparent) 1.1px,transparent 1.1px)!important;background-size:14px 14px!important}
+.ai-msgs.ai-bg-dark{background:#121614!important}
+.ai-msgs.ai-bg-dark .ai-msg.bot{background:#1c221f;border-color:#2c3530;color:#f1f5f3}
+
+.ai-drawer.ai-hide-quick .ai-quick{display:none}
+.ai-drawer.ai-fs-sm .ai-msg{font-size:12.2px;line-height:1.6}
+.ai-drawer.ai-fs-lg .ai-msg{font-size:14.8px;line-height:1.82}
+
+.ai-row{display:flex;gap:8px;align-items:flex-end}
+.ai-row.bot{flex-direction:row-reverse}
+.ai-av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--ac2) 16%,var(--card));font-size:16px;flex-shrink:0}
+.ai-msg{align-self:auto;max-width:calc(100% - 42px);padding:10px 13px;font-size:13.5px;line-height:1.75;border-radius:16px;word-break:break-word}
+.ai-msg.bot{background:var(--card);border:1px solid var(--bd);color:var(--tx)}
+.ai-msg.usr{background:linear-gradient(135deg,var(--ac),#f97316);color:#fff}
+.ai-msg a{color:var(--ac2);font-weight:800}
+.ai-msg.usr a{color:#fff}
+.ai-dots i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mut);margin:0 2px;animation:aiD 1s infinite}
+.ai-dots i:nth-child(2){animation-delay:.15s}.ai-dots i:nth-child(3){animation-delay:.3s}
+@keyframes aiD{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+.ai-input-row{align-items:flex-end}
+.ai-input-row textarea{flex:1;border:1.5px solid var(--bd);border-radius:14px;padding:10px 12px;font:inherit;font-size:13.5px;font-weight:700;background:var(--bg);color:var(--tx);outline:none;resize:none;max-height:110px;line-height:1.5}
+.ai-input-row textarea:focus{border-color:var(--ac)}
+.ai-send{height:42px;border-radius:14px}
+</style>
+</head>
+<body>
+<div id="toast-box" aria-live="polite"></div>
+
+<!-- زر سهم يسار الشاشة للنزول إلى خانة البحث -->
+<button type="button" class="jump-down-btn" id="jump-down-btn" title="انزل إلى خانة البحث واللعبة" aria-label="انزل إلى خانة البحث واللعبة">↓</button>
+
+<!-- نافذة لوحة الصدارة العامة -->
+<div class="lb-ov" id="lb-ov" aria-label="لوحة الصدارة العامة">
+  <div class="lb-card">
+    <div class="dly-h"><span>🏆 لوحة الصدارة العامة</span><button type="button" class="dly-x" id="lb-x">✕</button></div>
+    <div style="font-size:12.5px;color:var(--mut);font-weight:700">ترتيب اللاعبين المشترك العام في اللعبة</div>
+    <div class="lb-list" id="lb-list"></div>
+  </div>
+</div>
+
+<!-- بطاقة استعانة بصديق المربعة (تايمر دقيقة + شعار الهاتف) -->
+<div class="friend-ov" id="friend-ov" aria-label="استعانة بصديق">
+  <div class="friend-box" id="friend-box">
+    <div class="friend-phone">📞</div>
+    <div class="friend-title" id="friend-title">جاري الاتصال بصديق...</div>
+    <div class="friend-sub" id="friend-sub">معك دقيقة كاملة للتشاور أو الاتصال بخويك</div>
+    <div class="friend-clock" id="friend-clock">01:00</div>
+    <div class="friend-bar"><i id="friend-bar-fill"></i></div>
+    <div class="friend-btns">
+      <button type="button" class="btn g" id="friend-done-self">أكمل بنفسي ✍️</button>
+      <button type="button" class="btn" id="friend-reveal-now">اكشف الإجابة الآن ⚡</button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة إعدادات الموقع بالعرض مع تبويبات -->
+<div class="site-set-ov" id="site-set-ov" aria-label="إعدادات الموقع">
+  <div class="site-set-card" id="site-set-card">
+    <div class="dly-h"><span>⚙️ إعدادات الموقع</span><button type="button" class="dly-x" id="site-set-x">✕</button></div>
+
+    <div class="site-tabs-bar" id="site-tabs-bar">
+      <button type="button" class="site-tab-btn on" data-stab="look">🎨 المظهر</button>
+      <button type="button" class="site-tab-btn" data-stab="play">🎮 اللعب</button>
+      <button type="button" class="site-tab-btn" data-stab="search">🔍 البحث والتنبيه</button>
+      <button type="button" class="site-tab-btn" data-stab="data">💾 البيانات</button>
+    </div>
+
+    <!-- تبويب المظهر -->
+    <div class="site-pane active" id="stab-look">
+      <div class="site-cols-2">
+        <div class="site-box">
+          <span class="site-set-lbl">🎨 لون الهوية والخط والشبكة</span>
+          <div class="site-theme-grid" id="site-theme-grid">
+            <button type="button" class="site-chip" data-theme="default">ناري</button>
+            <button type="button" class="site-chip" data-theme="ocean">محيطي</button>
+            <button type="button" class="site-chip" data-theme="royal">ملكي</button>
+            <button type="button" class="site-chip" data-theme="emerald">زمردي</button>
+          </div>
+          <span class="site-set-lbl" style="margin-top:10px">🔠 حجم خط عناصر القائمة</span>
+          <div class="site-seg-grid" id="site-font-grid">
+            <button type="button" class="site-chip" data-rowfont="md">عادي</button>
+            <button type="button" class="site-chip" data-rowfont="lg">كبير</button>
+            <button type="button" class="site-chip" data-rowfont="xl">ضخم</button>
+          </div>
+          <span class="site-set-lbl" style="margin-top:10px">📐 كثافة الصفوف</span>
+          <div class="site-seg-grid" id="site-density-grid">
+            <button type="button" class="site-chip" data-density="normal">مريح</button>
+            <button type="button" class="site-chip" data-density="compact">مضغوط</button>
+            <button type="button" class="site-chip" data-density="1col">عمود واحد</button>
+          </div>
+        </div>
+
+        <div class="site-box">
+          <span class="site-set-lbl">🖼️ عناصر الواجهة والحركة</span>
+          <label class="site-sw"><span>🌙 الوضع الليلي للموقع بالكامل</span><input type="checkbox" id="ss-dark"></label>
+          <label class="site-sw"><span>🏅 إظهار شريط الأرقام القياسية</span><input type="checkbox" id="ss-hof"></label>
+          <label class="site-sw"><span>📝 إظهار الوصف تحت العنوان</span><input type="checkbox" id="ss-sub"></label>
+          <label class="site-sw"><span>⬇️ إظهار سهم النزول السريع يسار الشاشة</span><input type="checkbox" id="ss-jump"></label>
+          <label class="site-sw"><span>🧘 تقليل الحركة والأنيميشن</span><input type="checkbox" id="ss-rm"></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- تبويب اللعب -->
+    <div class="site-pane" id="stab-play">
+      <div class="site-cols-2">
+        <div class="site-box">
+          <span class="site-set-lbl">⏱️ مدة سباق الوقت والقنبلة</span>
+          <span class="site-set-lbl" style="font-size:12px;color:var(--mut)">⏳ وقت سباق الوقت</span>
+          <div class="site-seg-grid" id="site-rush-grid">
+            <button type="button" class="site-chip" data-rush="45">45 ثانية</button>
+            <button type="button" class="site-chip" data-rush="60">60 ثانية</button>
+            <button type="button" class="site-chip" data-rush="90">90 ثانية</button>
+          </div>
+          <span class="site-set-lbl" style="font-size:12px;color:var(--mut);margin-top:10px">💣 مؤقت قنبلة الدور</span>
+          <div class="site-seg-grid" id="site-bomb-grid">
+            <button type="button" class="site-chip" data-bomb="10">10 ثوانٍ</button>
+            <button type="button" class="site-chip" data-bomb="15">15 ثانية</button>
+            <button type="button" class="site-chip" data-bomb="20">20 ثانية</button>
+          </div>
+        </div>
+
+        <div class="site-box">
+          <span class="site-set-lbl">🎯 خيارات اللعب والتأكيد</span>
+          <label class="site-sw"><span>⚠️ تأكيد قبل زر «اكشف الإجابات»</span><input type="checkbox" id="ss-conf-giveup"></label>
+          <label class="site-sw"><span>🛡️ تأكيد قبل حذف القوائم المخصصة</span><input type="checkbox" id="ss-conf-del"></label>
+          <label class="site-sw"><span>🔊 تفعيل المؤثرات الصوتية</span><input type="checkbox" id="ss-sound-on"></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- تبويب البحث والتنبيه -->
+    <div class="site-pane" id="stab-search">
+      <div class="site-cols-2">
+        <div class="site-box">
+          <span class="site-set-lbl">🔢 عدد الاقتراحات والأسلوب</span>
+          <div class="site-seg-grid" id="site-sug-grid">
+            <button type="button" class="site-chip" data-sugcnt="5">5 اقتراحات</button>
+            <button type="button" class="site-chip" data-sugcnt="7">7 اقتراحات</button>
+            <button type="button" class="site-chip" data-sugcnt="10">10 اقتراحات</button>
+          </div>
+          <span class="site-set-lbl" style="margin-top:10px">📌 ترتيب التصنيفات الافتراضي</span>
+          <div class="site-seg-grid" id="site-filter-grid">
+            <button type="button" class="site-chip" data-defFilter="all">الكل</button>
+            <button type="button" class="site-chip" data-defFilter="uncompleted">غير المختوم</button>
+            <button type="button" class="site-chip" data-defFilter="keep">حسب التصفية</button>
+          </div>
+        </div>
+
+        <div class="site-box">
+          <span class="site-set-lbl">🔍 البحث والإشعارات</span>
+          <label class="site-sw"><span>🔍 إظهار اقتراحات البحث المنسدلة</span><input type="checkbox" id="ss-sug"></label>
+          <label class="site-sw"><span>💡 إظهار كرت التنبيه قبل البحث</span><input type="checkbox" id="ss-cue"></label>
+          <label class="site-sw"><span>🔔 إظهار الإشعارات المنبثقة</span><input type="checkbox" id="ss-toast"></label>
+          <label class="site-sw"><span>✨ تفعيل الإشعارات التلقائية الدورية</span><input type="checkbox" id="ss-auto-bell"></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- تبويب البيانات -->
+    <div class="site-pane" id="stab-data">
+      <div class="site-box">
+        <span class="site-set-lbl">💾 النسخ الاحتياطي العام وإدارة البيانات</span>
+        <div class="site-act-grid">
+          <button type="button" class="site-btn-act" id="ss-export-json">📦 تصدير كود الحفظ</button>
+          <button type="button" class="site-btn-act" id="ss-import-json">📥 استيراد كود الحفظ</button>
+          <button type="button" class="site-btn-act" id="ss-export">📤 نسخ ملخص التقدم</button>
+          <button type="button" class="site-btn-act" id="ss-reset-ui">↩️ ضبط إعدادات الموقع</button>
+          <button type="button" class="site-btn-act danger" id="ss-reset-xp">🧹 تصفير XP والختومات</button>
+          <button type="button" class="site-btn-act danger" id="ss-reset-daily">🗓️ تصفير التحدي اليومي</button>
+        </div>
+        <textarea class="site-io-box" id="ss-io-box" placeholder="يظهر هنا كود النسخ الاحتياطي العام أو الصق كود حفظ هنا ثم اضغط استيراد..."></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- المساعد الذكي العائم (يمين الشاشة) -->
+<button type="button" class="ai-fab" id="ai-fab" title="المساعد الذكي — ابحث، اصنع كاتقوري، هنتات، أو اسأل">🤖</button>
+<div class="ai-drawer" id="ai-drawer" aria-label="المساعد الذكي">
+  <div class="ai-head">
+    <span>🤖 مساعد توب 10 الذكي</span>
+    <button type="button" class="ai-close" id="ai-close" title="إغلاق">✕</button>
+  </div>
+  <div class="ai-quick">
+    <button type="button" class="ai-qbtn" data-prompt="اصنع كاتقوري الدوري الأمريكي">🇺🇸 الدوري الأمريكي</button>
+    <button type="button" class="ai-qbtn" data-prompt="اعطني هنتات للقائمة">💡 هنتات</button>
+    <button type="button" class="ai-qbtn" data-prompt="سجل الاجوبة">📝 سجل الأجوبة</button>
+    <button type="button" class="ai-qbtn" data-prompt="من انت">🤖 من أنت</button>
+  </div>
+  <div class="ai-msgs" id="ai-msgs">
+    <div class="ai-msg bot">السلام عليكم! 👋 أصنع لك أي كاتقوري تبيه (مثل الدوري الأمريكي أو غيره)، وأربط إجاباته ومموهاته بنظام البحث مع دعم جلب البيانات عبر API، وأعطيك <b>هنتات</b> وأسجل الإجابات عند الطلب!</div>
+  </div>
+  <div class="ai-input-row">
+    <input type="text" id="ai-input" placeholder="اكتب: اصنع كاتقوري الدوري الأمريكي أو اسأل...">
+    <button type="button" class="ai-send" id="ai-send">إرسال</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- الطبقة 1 -->
+  <section class="layer-header" aria-label="الطبقة الأولى — الهيدر والسجل">
+    <header>
+      <h1>
+        🏆 توب 10
+        <span class="badge-pill" id="lvl">مستوى 1</span>
+        <span class="rank-pill" id="rank-title">مبتدئ روقان</span>
+        <span class="xp-pill" id="xp">0 XP</span>
+      </h1>
+      <div class="top-controls">
+        <button class="ib" id="site-set-open" title="إعدادات الموقع">⚙️</button>
+        <button class="ib" id="auto-bell" title="الإشعارات التلقائية">🔔</button>
+        <button class="ib" id="snd" title="الصوت">🔊</button>
+      </div>
+    </header>
+    <p class="sub">أكثر من 60 كاتقوري + نظام بحث وإجابات متكامل وحفظ عام مشترك للجميع</p>
+
+    <div class="public-strip" aria-label="اللاعب العام ولوحة الصدارة">
+      <div class="public-player-inline">
+        <span>👤 اللاعب:</span>
+        <span class="public-tag" id="pub-player-name">مقرن</span>
+        <button type="button" class="public-mini-btn" id="pub-rename-btn">✏️ تغيير الاسم</button>
+        <button type="button" class="public-mini-btn lb" id="pub-lb-btn">🏆 لوحة الصدارة</button>
+      </div>
+    </div>
+
+    <div class="hof-bar" aria-label="سجل الأرقام القياسية">
+      <span class="hof-chip" id="hof-streak">🏅 أطول سلسلة: 0</span>
+      <span class="hof-chip" id="hof-rush">⚡ أفضل سباق: 0/10</span>
+      <span class="hof-chip" id="hof-wins">👑 انتصارات الجماعي: 0</span>
+    </div>
+  </section>
+
+  <!-- الطبقة 2 -->
+  <section class="layer-cats" aria-label="الطبقة الثانية — التصنيفات">
+    <div id="tabs"></div>
+  </section>
+
+  <!-- الطبقة 3 -->
+  <section class="layer-modes" aria-label="الطبقة الثالثة — أطوار اللعب">
+    <div class="special-head">
+      <div class="special-title">🌟 أطوار اللعب <span class="special-tag">طبقات وتحديات</span></div>
+      <span style="font-size:12.5px;color:var(--mut);font-weight:700">تقدر تشغّل اللعب الجماعي أو سباق الوقت أو التحدي الأعمى على أي كاتقوري</span>
+    </div>
+    <div class="special-grid">
+      <button type="button" class="mode-card" id="mc-multi" data-mode="multi">
+        <div class="mode-top">
+          <span>👥 لعب جماعي</span>
+          <span class="mode-badge">جولات + قدرات</span>
+        </div>
+        <div class="mode-desc">مخاطرة دبل، قنبلة دور، كشف حرف، واستعانة بصديق (استعمال واحد).</div>
+      </button>
+
+      <button type="button" class="mode-card" id="mc-rush" data-mode="rush">
+        <div class="mode-top">
+          <span>⚡ سباق الوقت</span>
+          <span class="mode-badge">60 ثانية</span>
+        </div>
+        <div class="mode-desc">تحدي سرعة 60 ثانية على الكاتقوري المختار مع نقاط إضافية.</div>
+      </button>
+
+      <button type="button" class="mode-card" id="mc-clues" data-mode="clues">
+        <div class="mode-top">
+          <span>🕵️‍♂️ خمّن بالوصف</span>
+          <span class="mode-badge">ألغاز ووصف</span>
+        </div>
+        <div class="mode-desc">اقرأ الوصف الموجود تحت كل مركز واكتب الإجابة الصحيحة.</div>
+      </button>
+
+      <button type="button" class="mode-card" id="mc-blind" data-mode="blind">
+        <div class="mode-top">
+          <span>🙈 التحدي الأعمى</span>
+          <span class="mode-badge">+15 XP بونص</span>
+        </div>
+        <div class="mode-desc">اسم الكاتقوري مخفي في البداية — خمّن العناصر واكتشف اللغز!</div>
+      </button>
+    </div>
+  </section>
+
+  <!-- الطبقة 4 -->
+  <section class="layer-arena" aria-label="الطبقة الرابعة — ساحة التحدي">
+    <div class="rush-banner" id="rush-banner">
+      <div>
+        <strong>⚡ تحدي السباق ضد الوقت</strong>
+        <div style="font-size:12.5px;color:var(--mut);font-weight:700">60 ثانية لكشف القائمة — كل إجابة صح تعطيك +10 نقاط سرعة إضافية!</div>
+      </div>
+      <div class="rush-clock" id="rush-clock">01:00</div>
+    </div>
+
+    <div class="multi-panel" id="multi-panel">
+      <div class="multi-top">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span class="round-badge" id="round-label">🏆 الجولة 1 من 3 (الأول لـ 2)</span>
+          <button type="button" class="filter-btn" id="toggle-bomb">💣 قنبلة الدور: إيقاف</button>
+          <span class="bomb-tag" id="bomb-clock" hidden>💣 15s</span>
+        </div>
+        <div class="multi-controls">
+          <input type="text" id="p1-name" value="لاعب 1" placeholder="اسم الأول">
+          <input type="text" id="p2-name" value="لاعب 2" placeholder="اسم الثاني">
+          <button type="button" class="filter-btn on" id="apply-names">تحديث الأسماء</button>
+        </div>
+      </div>
+
+      <div class="players-scores">
+        <div class="p-card turn" id="p1-card">
+          <div class="p-meta">
+            <span id="p1-label">🎮 لاعب 1</span>
+            <span class="p-wins" id="p1-wins">الجولات: 0</span>
+          </div>
+          <span class="p-score" id="p1-score">0 XP</span>
+        </div>
+        <div class="p-card" id="p2-card">
+          <div class="p-meta">
+            <span id="p2-label">🎮 لاعب 2</span>
+            <span class="p-wins" id="p2-wins">الجولات: 0</span>
+          </div>
+          <span class="p-score" id="p2-score">0 XP</span>
+        </div>
+      </div>
+
+      <div class="multi-actions-row">
+        <div class="powerups-group">
+          <button type="button" class="pwr-btn" id="pwr-double">🎯 مخاطرة دبل (1)</button>
+          <button type="button" class="pwr-btn" id="pwr-peek">🔤 كشف حرف (1)</button>
+          <button type="button" class="pwr-btn" id="call-friend">📞 استعانة بصديق (1)</button>
+        </div>
+        <div class="friend-group">
+          <button type="button" class="pwr-btn" id="reset-series">🔄 تصفير السلسلة</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- الطبقة 5 -->
+  <section class="layer-play" id="play-section" aria-label="الطبقة الخامسة — منطقة اللعب">
+    <div class="search-cue-banner" id="search-cue-banner">
+      <span>🎯 <b>منطقة التخمين والبحث:</b> اكتب اسم العنصر تحت واختره من القائمة لإضافته في المراكز العشرة.</span>
+      <button type="button" class="search-cue-btn" id="focus-search-btn">اكتب إجابتك ↵</button>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span id="prog-label">التقدم في القائمة: 0 / 10</span>
+        <span id="prog-pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="prog-fill"></div>
+      </div>
+    </div>
+
+    <div class="bar">
+      <div class="stats-left">
+        <span id="ask"></span>
+        <span class="streak-chip" id="streak">🔥 سلسلة: 0</span>
+        <button type="button" class="timer-chip" id="timer-btn" title="تشغيل أو إيقاف عداد الوقت">⏱️ وقت: إيقاف</button>
+      </div>
+      <span class="hearts" id="hp"></span>
+    </div>
+
+    <div class="sbox" id="main-sbox">
+      <div class="sbox-inner" id="sbox-inner">
+        <span class="s-icon">🔍</span>
+        <input id="q" placeholder="اكتب كلمة (لوس، ميامي، تفاح...) واختر جوابك" autocomplete="off">
+        <button class="s-clear" id="s-clear" type="button" title="مسح" hidden>✕</button>
+      </div>
+      <div class="sug" id="sug" hidden></div>
+    </div>
+
+    <div class="msg" id="msg"></div>
+    <div id="out"></div>
+    <div class="btns">
+      <button class="btn r" id="rand-cat">عشوائي 🎲</button>
+      <button class="btn h" id="hint">تلميح 💡</button>
+      <button class="btn g" id="share-res">انسخ نتيجتي 📋</button>
+      <button class="btn g" id="giveup">اكشف الإجابات</button>
+      <button class="btn" id="again">إعادة 🔄</button>
+    </div>
+    <div class="src" id="src"></div>
+  </section>
+</div>
+
+<script>
+var DATA=[
+// 0
+{t:"🎮 ألعاب مبيعاً",ask:"أكثر الألعاب مبيعاً",unit:"مليون نسخة",asof:"أرقام تقريبية ومشهورة",
+src:[["Guinness","https://www.guinnessworldrecords.com/world-records/best-selling-video-game"]],
+items:[["Minecraft",425,"ماين كرافت ماينكرافت"],["Grand Theft Auto V",235,"قراند جي تي اي gta 5 جتا"],["Red Dead Redemption 2",89,"ريد ديد rdr"],["Wii Sports",82.9,"وي سبورتس"],["PUBG: Battlegrounds",75,"ببجي"],["Mario Kart 8 Deluxe",70,"ماريو كارت"],["The Witcher 3",65,"ويتشر"],["Terraria",64,"تيراريا"],["Super Mario Bros.",58,"سوبر ماريو"],["Animal Crossing: New Horizons",50.6,"انيمل كروسنق"]],
+decoys:[["Fortnite","فورتنايت"],["FIFA 23","فيفا"],["Elden Ring","الدن رنق"],["Cyberpunk 2077","سايبربنك"],["Among Us","امونق اس"],["God of War","غود اوف وور"]]},
+
+// 1
+{t:"🌍 أكثر الدول سكاناً",cd:1,ask:"أكثر الدول سكاناً",unit:"مليون نسمة",asof:"تقديرات سكانية تقريبية",
+src:[["UN World Population Prospects","https://population.un.org/wpp/"]],
+items:[["الهند",1464,"india"],["الصين",1416,"china"],["الولايات المتحدة",347,"امريكا usa"],["إندونيسيا",284,"اندونيسيا"],["باكستان",255,"pakistan"],["نيجيريا",238,"nigeria"],["البرازيل",213,"brazil"],["بنغلاديش",175,"bangladesh"],["روسيا",144,"russia"],["إثيوبيا",135,"ethiopia"]],
+decoys:[["المكسيك","mexico"],["اليابان","japan"],["مصر","egypt"],["الفلبين","philippines"],["تركيا","turkey"],["السعودية","saudi"]]},
+
+// 2
+{t:"🇸🇦 دول عربية",ask:"أكبر الدول العربية مساحة",unit:"ألف كم²",asof:"المساحة الكلية",
+src:[["CIA World Factbook","https://www.cia.gov/the-world-factbook/"]],
+items:[["الجزائر",2382,"algeria"],["السعودية",2150,"saudi المملكة"],["السودان",1861,"sudan"],["ليبيا",1760,"libya"],["موريتانيا",1031,"mauritania"],["مصر",1002,"egypt"],["الصومال",638,"somalia"],["اليمن",528,"yemen"],["المغرب",447,"morocco"],["العراق",438,"iraq"]],
+decoys:[["عُمان","oman عمان"],["سوريا","syria"],["تونس","tunisia"],["الأردن","jordan"],["الإمارات","uae emirates"],["الكويت","kuwait"],["قطر","qatar"]]},
+
+// 3
+{t:"⛰️ أعلى الجبال",ask:"أعلى جبال العالم",unit:"متر",asof:"الارتفاع فوق سطح البحر",
+src:[["Britannica","https://www.britannica.com/topic/list-of-mountains"]],
+items:[["إيفرست",8849,"everest"],["كي 2",8611,"k2"],["كانشينجونجا",8586,"kangchenjunga"],["لوتسي",8516,"lhotse"],["ماكالو",8485,"makalu"],["تشو أويو",8188,"cho oyu"],["داولاجيري",8167,"dhaulagiri"],["مانازلو",8163,"manaslu"],["ننغا باربات",8126,"nanga parbat"],["أنابورنا",8091,"annapurna"]],
+decoys:[["كليمنجارو","kilimanjaro"],["مون بلان","mont blanc"],["ماترهورن","matterhorn"],["دينالي","denali"],["جبل فوجي","fuji"]]},
+
+// 4
+{t:"🏙️ أطول المباني",ask:"أطول المباني في العالم",unit:"متر",asof:"مباني مكتملة",
+src:[["CTBUH","https://www.skyscrapercenter.com"]],
+items:[["برج خليفة في دبي",828,"burj khalifa dubai الامارات"],["برج ميرديكا 118 في كوالالمبور",678.9,"merdeka 118 ماليزيا"],["برج شنغهاي في شنغهاي",632,"shanghai tower الصين"],["برج الساعة (أبراج البيت) في مكة",601,"abraj al bait clock makkah mecca ساعة مكة السعودية"],["برج بينغ آن في شنزن",599.1,"ping an shenzhen الصين"],["برج لوتي وورلد في سيول",554.5,"lotte world seoul كوريا"],["برج وان وورلد تريد في نيويورك",541.3,"one world trade new york امريكا"],["برج غوانزو CTF في غوانزو",530,"guangzhou ctf الصين"],["برج تيانجين CTF في تيانجين",530,"tianjin ctf الصين"],["برج سيتيك في بكين",528,"citic zun beijing الصين"]],
+decoys:[["برج تايبيه 101","taipei 101"],["برجا بتروناس","petronas"],["برج إمباير ستيت","empire state"],["برج إيفل","eiffel"],["برج المملكة","kingdom centre"]]},
+
+// 5
+{t:"🌊 أطول الأنهار",ask:"أطول أنهار العالم",unit:"كم",asof:"أطوال تقريبية مشهورة",
+src:[["Britannica","https://www.britannica.com/topic/list-of-rivers-2007879"]],
+items:[["النيل",6650,"nile"],["الأمازون",6400,"amazon"],["اليانغتسي",6300,"yangtze"],["المسيسيبي-ميسوري",6275,"mississippi"],["ينيسي",5539,"yenisei"],["النهر الأصفر",5464,"yellow"],["أوب-إرتيش",5410,"ob"],["بارانا",4880,"parana"],["الكونغو",4700,"congo"],["آمور",4444,"amur"]],
+decoys:[["الميكونغ","mekong"],["لينا","lena"],["النيجر","niger"],["الدانوب","danube"],["الفرات","euphrates"],["دجلة","tigris"]]},
+
+// 6
+{t:"🏝️ أكبر الجزر",ask:"أكبر جزر العالم",unit:"ألف كم²",asof:"المساحة التقريبية",
+src:[["Britannica","https://www.britannica.com/topic/island"]],
+items:[["غرينلاند",2166,"greenland"],["غينيا الجديدة",786,"new guinea"],["بورنيو",748,"borneo"],["مدغشقر",587,"madagascar"],["جزيرة بافن",507,"baffin"],["سومطرة",443,"sumatra"],["هونشو",227,"honshu"],["فيكتوريا",217,"victoria"],["بريطانيا العظمى",209,"great britain"],["إليسمير",196,"ellesmere"]],
+decoys:[["أيسلندا","iceland"],["كوبا","cuba"],["صقلية","sicily"],["أيرلندا","ireland"],["هاواي","hawaii"]]},
+
+// 7
+{t:"💧 أكبر البحيرات",ask:"أكبر بحيرات العالم",unit:"ألف كم²",asof:"المساحة التقريبية",
+src:[["Wikipedia","https://en.wikipedia.org/wiki/List_of_lakes_by_area"]],
+items:[["بحر قزوين",371,"caspian"],["سوبيريور",82.1,"superior"],["فيكتوريا",68.8,"victoria"],["هورون",59.6,"huron"],["ميشيغان",58,"michigan"],["تنجانيقا",32.6,"tanganyika"],["بايكال",31.7,"baikal"],["الدب الكبير",31.3,"great bear"],["ملاوي",29.6,"malawi nyasa"],["العبد العظيم",28.6,"great slave"]],
+decoys:[["أرال","aral"],["تيتيكاكا","titicaca"],["إيري","erie"],["تشاد","chad"],["البحر الميت","dead sea"]]},
+
+// 8
+{t:"🗺️ أكبر الدول مساحة",cd:1,ask:"أكبر دول العالم مساحة",unit:"مليون كم²",asof:"المساحة الكلية",
+src:[["CIA World Factbook","https://www.cia.gov/the-world-factbook/"]],
+items:[["روسيا",17.1,"russia"],["كندا",10,"canada"],["الولايات المتحدة",9.8,"امريكا usa"],["الصين",9.6,"china"],["البرازيل",8.5,"brazil"],["أستراليا",7.7,"australia"],["الهند",3.3,"india"],["الأرجنتين",2.8,"argentina"],["كازاخستان",2.7,"kazakhstan"],["الجزائر",2.4,"algeria"]],
+decoys:[["السعودية","saudi المملكة"],["منغوليا","mongolia"],["إيران","iran"],["ليبيا","libya"],["المكسيك","mexico"]]},
+
+// 9
+{t:"🛢️ احتياطي النفط",cd:1,ask:"أكبر الدول احتياطياً من النفط",unit:"مليار برميل",asof:"احتياطي مؤكد تقريبي",
+src:[["OPEC","https://www.opec.org/annual-statistical-bulletin.html"]],
+items:[["فنزويلا",303,"venezuela"],["السعودية",267,"saudi المملكة"],["إيران",209,"iran"],["كندا",164,"canada"],["العراق",145,"iraq"],["الإمارات",113,"uae emirates"],["الكويت",101,"kuwait"],["روسيا",80,"russia"],["الولايات المتحدة",74,"امريكا usa"],["ليبيا",48,"libya"]],
+decoys:[["نيجيريا","nigeria"],["كازاخستان","kazakhstan"],["قطر","qatar"],["الصين","china"],["البرازيل","brazil"]]},
+
+// 10
+{cd:2,t:"🇺🇸 ولايات مساحة",ask:"أكبر الولايات الأمريكية مساحة",unit:"ألف كم²",asof:"المساحة الكلية",
+src:[["US Census Bureau","https://www.census.gov/"]],
+items:[["ألاسكا",1723,"alaska"],["تكساس",696,"texas"],["كاليفورنيا",424,"california"],["مونتانا",381,"montana"],["نيو مكسيكو",315,"new mexico"],["أريزونا",295,"arizona"],["نيفادا",286,"nevada"],["كولورادو",270,"colorado"],["أوريغون",255,"oregon"],["وايومنغ",253,"wyoming"]],decoys:[]},
+
+// 11
+{cd:2,t:"🗽 ولايات سكان",ask:"أكثر الولايات الأمريكية سكاناً",unit:"مليون نسمة",asof:"تقديرات سكانية تقريبية",
+src:[["US Census Bureau","https://www.census.gov/"]],
+items:[["كاليفورنيا",39.4,"california"],["تكساس",31.3,"texas"],["فلوريدا",23.4,"florida"],["نيويورك",19.9,"new york"],["بنسلفانيا",13.1,"pennsylvania"],["إيلينوي",12.7,"illinois"],["أوهايو",11.9,"ohio"],["جورجيا",11.2,"georgia"],["نورث كارولاينا",11,"north carolina"],["ميشيغان",10.1,"michigan"]],decoys:[["ألاسكا","alaska"],["أريزونا","arizona"],["نيفادا","nevada"],["كولورادو","colorado"],["هاواي","hawaii"]]},
+
+// 12
+{t:"🔬 أصغر الدول",cd:1,ask:"أصغر دول العالم مساحة",unit:"كم²",asof:"المساحة الكلية تقريباً",
+src:[["CIA World Factbook","https://www.cia.gov/the-world-factbook/"]],
+items:[["الفاتيكان",0.5,"vatican"],["موناكو",2,"monaco"],["ناورو",21,"nauru"],["توفالو",26,"tuvalu"],["سان مارينو",61,"san marino"],["ليختنشتاين",160,"liechtenstein"],["جزر مارشال",181,"marshall"],["سانت كيتس ونيفيس",261,"saint kitts nevis"],["المالديف",298,"maldives"],["مالطا",316,"malta"]],decoys:[["لوكسمبورغ","luxembourg"],["سنغافورة","singapore"],["البحرين","bahrain"],["قبرص","cyprus"],["أندورا","andorra"]]},
+
+// 13
+{t:"🌊 أطول السواحل",cd:1,ask:"أطول الدول سواحل",unit:"كم",asof:"طول الساحل تقريباً",
+src:[["CIA World Factbook","https://www.cia.gov/the-world-factbook/field/coastline/"]],
+items:[["كندا",202080,"canada"],["النرويج",58133,"norway"],["إندونيسيا",54720,"indonesia"],["روسيا",37653,"russia"],["الفلبين",36289,"philippines"],["اليابان",29751,"japan"],["أستراليا",25760,"australia"],["الولايات المتحدة",19924,"usa امريكا"],["نيوزيلندا",15134,"new zealand"],["الصين",14500,"china"]],decoys:[]},
+
+// 14
+{t:"🌙 أكبر الأقمار",ask:"أكبر الأقمار في المجموعة الشمسية",unit:"كم (القطر)",asof:"القطر التقريبي",
+src:[["NASA","https://science.nasa.gov/solar-system/moons/"]],
+items:[["غانيميد",5268,"ganymede المشتري"],["تيتان",5150,"titan زحل"],["كاليستو",4821,"callisto"],["آيو",3643,"io"],["القمر",3474,"moon الارض"],["أوروبا",3122,"europa"],["ترايتون",2707,"triton نبتون"],["تيتانيا",1578,"titania اورانوس"],["ريا",1527,"rhea"],["أوبيرون",1523,"oberon"]],decoys:[["شارون","charon"],["فوبوس","phobos"],["ديموس","deimos"],["إنسيلادوس","enceladus"],["بلوتو","pluto"]]},
+
+// 15
+{t:"⚽ أغلى الصفقات",ask:"أغلى صفقات انتقال في تاريخ كرة القدم",unit:"مليون يورو",asof:"صفقات تاريخية بارزة",
+src:[["FootballTransfers","https://www.footballtransfers.com/"]],
+items:[["نيمار",222,"neymar باريس برشلونة"],["كيليان مبابي",180,"mbappe مبابى موناكو"],["عثمان ديمبيلي",148,"dembele ديمبلي دورتموند"],["ألكسندر إيساك",145,"isak ايزاك ليفربول"],["مورغان روجرز",138,"rogers روجرز"],["فيليب كوتينيو",135,"coutinho كوتينهو"],["جواو فيليكس",127.2,"joao felix فيليكس"],["فلوريان فيرتس",125,"wirtz فيرتز"],["أنطوان غريزمان",120,"griezmann غريزمان"],["جاك غريليش",117.5,"grealish غريليش"]],
+decoys:[["كريستيانو رونالدو","ronaldo cr7 رونالدو"],["ليونيل ميسي","messi"],["محمد صلاح","salah"],["إيرلينغ هالاند","haaland"],["فينيسيوس جونيور","vinicius"],["جود بيلينغهام","bellingham"]]},
+
+// 16
+{t:"🎬 أعلى الأفلام إيراداً",ask:"أعلى الأفلام إيرادات في العالم",unit:"مليون دولار",asof:"إيرادات عالمية تقريبية",
+src:[["Box Office Mojo","https://boxofficemojo.com/alltime/world/"]],
+items:[["Avatar (2009)",2923,"افاتار أفاتار"],["Avengers: Endgame",2800,"المنتقمون نهاية اللعبة اند قيم افنجرز"],["Avatar: The Way of Water",2320,"افاتار طريق الماء"],["Titanic",2264,"تايتانك"],["Ne Zha 2",2200,"نيه جا نا جا"],["Star Wars: The Force Awakens",2071,"ستار وورز حرب النجوم"],["Avengers: Infinity War",2052,"المنتقمون حرب اللانهاية انفنتي وار"],["Spider-Man: No Way Home",1921,"سبايدرمان لا طريق للعودة"],["Zootopia 2",1870,"زوتوبيا"],["Inside Out 2",1699,"قلباً وقالباً انسايد اوت"]],
+decoys:[["Jurassic World","جوراسيك وورلد"],["The Lion King","الأسد الملك ليون كينج"],["Top Gun: Maverick","توب قن"],["Barbie","باربي"],["Oppenheimer","أوبنهايمر"]]},
+
+// 17
+{t:"🏆 هدافو المونديال",ask:"أكثر الهدافين في تاريخ كأس العالم",unit:"هدف",asof:"أبرز الهدافين تاريخياً",
+src:[["FIFA","https://www.fifa.com/"]],
+items:[["كيليان مبابي",22,"mbappe مبابى"],["ليونيل ميسي",21,"messi مسي"],["ميروسلاف كلوزه",16,"klose كلوسه"],["رونالدو (البرازيلي)",15,"ronaldo nazario رونالدو الظاهرة r9"],["غيرد مولر",14,"gerd muller مولر"],["جوست فونتين",13,"just fontaine"],["بيليه",12,"pele بيلي"],["شاندور كوتشيش",11,"kocsis"],["غابرييل باتيستوتا",10,"batistuta"],["توماس مولر",10,"thomas muller"]],
+decoys:[["كريستيانو رونالدو","cristiano ronaldo cr7"],["دييغو مارادونا","maradona"],["زين الدين زيدان","zidane"],["محمد صلاح","salah"],["إيرلينغ هالاند","haaland"]]},
+
+// 18
+{t:"▶️ قنوات يوتيوب",ask:"أكثر قنوات يوتيوب اشتراكاً",unit:"مليون مشترك",asof:"أرقام تقريبية",
+src:[["YouTube","https://www.youtube.com/"]],
+items:[["MrBeast",521,"مستر بيست مر بيست"],["T-Series",315,"تي سيريز"],["Cocomelon",203,"كوكوميلون"],["SET India",190,"ست انديا"],["Vlad and Niki",151,"فلاد ونيكي"],["Kids Diana Show",135,"كيدز ديانا"],["Like Nastya",128,"لايك ناستيا"],["Stokes Twins",122,"ستوكس توينز"],["Zee Music",118,"زي ميوزك"],["WWE",110,"مصارعة wwe"]],
+decoys:[["PewDiePie","بيوديباي"],["BLACKPINK","بلاك بينك"],["Dude Perfect","ديود بيرفكت"],["Markiplier","ماركيبلاير"],["KSI","كي اس اي"]]},
+
+// 19
+{t:"🍔 أشهر المطاعم",ask:"أشهر سلاسل المطاعم عالمياً",unit:"شهرة عالمية",asof:"قائمة مشهورة سهلة",
+src:[["Restaurant Brands","https://www.rbi.com/"]],
+items:[["McDonald's",1,"ماكدونالدز مك دونالدز"],["KFC",2,"كنتاكي"],["Starbucks",3,"ستاربكس"],["Burger King",4,"برجر كنج"],["Subway",5,"صب واي"],["Pizza Hut",6,"بيتزا هت"],["Domino's",7,"دومينوز"],["Taco Bell",8,"تاكو بيل"],["Wendy's",9,"وينديز"],["Chipotle",10,"تشيبوتلي"]],
+decoys:[["Five Guys","فايف قايز"],["Popeyes","بوبايز"],["Shake Shack","شيك شاك"],["Dunkin'","دانكن"],["Hardee's","هارديز"]]},
+
+// 20
+{t:"🍰 أشهر الحلويات",ask:"حلويات مشهورة حول العالم",unit:"شهرة عالمية",asof:"قائمة مشهورة سهلة",
+src:[["Britannica","https://www.britannica.com/food/dessert"]],
+items:[["Chocolate Cake",1,"كيكة شوكولاتة"],["Cheesecake",2,"تشيز كيك"],["Tiramisu",3,"تيراميسو"],["Donut",4,"دونات"],["Ice Cream",5,"ايس كريم آيسكريم"],["Brownies",6,"براونيز"],["Baklava",7,"بقلاوة"],["Crème Brûlée",8,"كريم بروليه"],["Macarons",9,"ماكرون"],["Churros",10,"تشوروس"]],
+decoys:[["Kunafa","كنافة"],["Mochi","موتشي"],["Pancakes","بان كيك"],["Waffles","وافل"],["Croissant","كرواسون"]]},
+
+// 21
+{t:"🚗 ماركات سيارات",ask:"أشهر ماركات السيارات عالمياً",unit:"شهرة عالمية",asof:"قائمة مشهورة سهلة",
+src:[["Toyota","https://www.toyota.com/"]],
+items:[["Toyota",1,"تويوتا"],["Mercedes-Benz",2,"مرسيدس"],["BMW",3,"بي ام دبليو"],["Ford",4,"فورد"],["Honda",5,"هوندا"],["Tesla",6,"تسلا"],["Ferrari",7,"فيراري"],["Porsche",8,"بورش"],["Lamborghini",9,"لامبورجيني"],["Nissan",10,"نيسان"]],
+decoys:[["Chevrolet","شفروليه"],["Hyundai","هيونداي"],["Kia","كيا"],["Audi","اودي"],["Lexus","لكزس"]]},
+
+// 22
+{t:"🎤 أشهر المغنين",ask:"مغنون مشهورون عالمياً",unit:"شهرة عالمية",asof:"قائمة مشهورة سهلة",
+src:[["Spotify","https://www.spotify.com/"]],
+items:[["Taylor Swift",1,"تايلور سويفت"],["Michael Jackson",2,"مايكل جاكسون"],["The Weeknd",3,"ذا ويكند"],["Ed Sheeran",4,"إد شيران"],["Justin Bieber",5,"جستن بيبر"],["Rihanna",6,"ريانا"],["Drake",7,"دريك"],["Adele",8,"أديل"],["Bruno Mars",9,"برونو مارس"],["Eminem",10,"ايمينيم"]],
+decoys:[["Beyoncé","بيونسيه"],["Shakira","شاكيرا"],["Lady Gaga","ليدي قاقا"],["Katy Perry","كاتي بيري"],["Billie Eilish","بيلي ايليش"]]},
+
+// 23
+{t:"📲 تطبيقات التواصل",ask:"أشهر تطبيقات التواصل الاجتماعي",unit:"شهرة عالمية",asof:"قائمة مشهورة سهلة",
+src:[["DataReportal","https://datareportal.com/"]],
+items:[["Facebook",1,"فيسبوك"],["YouTube",2,"يوتيوب"],["WhatsApp",3,"واتساب"],["Instagram",4,"انستقرام"],["TikTok",5,"تيك توك"],["WeChat",6,"ويتشات"],["Telegram",7,"تلجرام"],["Snapchat",8,"سناب شات"],["X",9,"تويتر"],["Pinterest",10,"بنترست"]],
+decoys:[["Discord","ديسكورد"],["Reddit","ريديت"],["Threads","ثريدز"],["LinkedIn","لينكد ان"],["Twitch","تويتش"]]},
+
+// 24
+{t:"🌍 منتخبات كرة القدم",ask:"أشهر منتخبات كرة القدم عالمياً",unit:"شهرة عالمية",asof:"منتخبات معروفة",
+src:[["FIFA","https://www.fifa.com/"]],
+items:[["البرازيل",1,"البرازيل brazil"],["الأرجنتين",2,"ارجنتين argentina"],["ألمانيا",3,"المانيا germany"],["فرنسا",4,"فرنسا france"],["إيطاليا",5,"ايطاليا italy"],["إسبانيا",6,"اسبانيا spain"],["إنجلترا",7,"انجلترا england"],["البرتغال",8,"portugal"],["هولندا",9,"netherlands"],["أوروغواي",10,"uruguay"]],
+decoys:[["السعودية","saudi"],["اليابان","japan"],["المغرب","morocco"],["كرواتيا","croatia"],["بلجيكا","belgika"]]},
+
+// 25
+{t:"🎯 ألعاب بلايستيشن",ask:"أشهر ألعاب PlayStation",unit:"شهرة عالمية",asof:"ألعاب مشهورة",
+src:[["PlayStation","https://www.playstation.com/"]],
+items:[["God of War",1,"قود اوف وور"],["The Last of Us",2,"ذا لاست اوف اس"],["Grand Theft Auto V",3,"قراند gta"],["Spider-Man",4,"سبايدرمان"],["Uncharted",5,"انشارتد"],["Ghost of Tsushima",6,"قوست اوف تسوشيما"],["Gran Turismo",7,"قران توريزمو"],["Bloodborne",8,"بلودبورن"],["Horizon",9,"هورايزن"],["Astro Bot",10,"استرو بوت"]],
+decoys:[["Minecraft","ماينكرافت"],["Fortnite","فورتنايت"],["EA Sports FC","فيفا اف سي"],["Call of Duty","كول اوف ديوتي"]]},
+
+// 26
+{t:"🏆 أبطال كأس العالم",ask:"المنتخبات الأكثر فوزاً بكأس العالم",unit:"عدد البطولات",asof:"بطولات كأس العالم للرجال",
+src:[["FIFA","https://www.fifa.com/"]],
+items:[["البرازيل",5,"brazil"],["ألمانيا",4,"germany"],["إيطاليا",4,"italy"],["الأرجنتين",3,"argentina"],["فرنسا",2,"france"],["أوروغواي",2,"uruguay"],["إنجلترا",1,"england"],["إسبانيا",1,"spain"],["هولندا",0,"netherlands"],["كرواتيا",0,"croatia"]],decoys:[["البرتغال","portugal"],["بلجيكا","belgium"],["السويد","sweden"]]},
+
+// 27
+{t:"🍎 فواكه مشهورة",ask:"فواكه معروفة ومحبوبة حول العالم",unit:"شهرة",asof:"قائمة سهلة ومألوفة",
+src:[["Britannica","https://www.britannica.com/"]],
+items:[["التفاح",1,"تفاح apple"],["الموز",2,"موز banana"],["البرتقال",3,"برتقال orange"],["الفراولة",4,"فراولة strawberry"],["العنب",5,"عنب grape"],["المانجو",6,"مانجو mango"],["البطيخ",7,"بطيخ حبحب watermelon"],["الأناناس",8,"اناناس pineapple"],["الليمون",9,"ليمون lemon"],["الرمان",10,"رمان pomegranate"]],
+decoys:[["الكيوي","kiwi"],["التين","fig"],["الكرز","cherry"],["الخوخ","peach"],["الأفوكادو","avocado"]]},
+
+// 28
+{t:"🥤 مشروبات يومية",ask:"أشهر المشروبات اليومية حول العالم",unit:"شهرة",asof:"قائمة سهلة ومألوفة",
+src:[["Britannica","https://www.britannica.com/"]],
+items:[["القهوة",1,"قهوة coffee"],["الشاي",2,"شاي tea"],["الماء",3,"ماء موية water"],["الحليب",4,"حليب milk"],["عصير البرتقال",5,"عصير برتقال juice"],["المشروبات الغازية",6,"بيبسي كولا غازيات soda"],["عصير التفاح",7,"عصير تفاح"],["القهوة المثلجة",8,"ايس كوفي iced coffee"],["الشوكولاتة الساخنة",9,"هوت شوكلت hot chocolate"],["عصير الليمون",10,"ليموناضة lemonade"]],
+decoys:[["ماتشا","matcha"],["عصير مانجو","mango juice"],["حليب فراولة","strawberry milk"],["كركديه","hibiscus"],["لبن","laban"]]},
+
+// 29
+{t:"🪐 كواكب المجموعة الشمسية",ask:"كواكب المجموعة الشمسية (المعروفة)",unit:"ترتيب من الشمس / أشهرها",asof:"قائمة سهلة جداً",
+src:[["NASA","https://science.nasa.gov/"]],
+items:[["عطارد",1,"عطارد mercury"],["الزهرة",2,"الزهرة venus"],["الأرض",3,"الارض earth"],["المريخ",4,"المريخ mars"],["المشتري",5,"المشتري jupiter"],["زحل",6,"زحل saturn"],["أورانوس",7,"اورانوس uranus"],["نبتون",8,"نبتون neptune"],["بلوتو",9,"بلوتو pluto"],["سيريس",10,"سيريس ceres"]],
+decoys:[["القمر","moon"],["الشمس","sun"],["تيتان","titan"],["أوروبا","europa"]]},
+
+// 30
+{t:"🐆 أسرع الحيوانات",ask:"أسرع الحيوانات في العالم",unit:"سرعة وشهرة",asof:"قائمة سهلة وممتعة",
+src:[["Britannica","https://www.britannica.com/"]],
+items:[["الفهد الصياد",1,"فهد شيتا cheetah"],["الصقر الشاهين",2,"صقر شاهين falcon"],["الظبي الأمريكي",3,"ظبي غزال pronghorn"],["الكنغر",4,"كنغر kangaroo"],["النعامة",5,"نعامة ostrich"],["الحصان",6,"حصان horse"],["الأرنب البري",7,"ارنب hare"],["السلوقي",8,"سلوقي كلب صيد greyhound"],["الأسد",9,"اسد lion"],["الذئب",10,"ذئب wolf"]],
+decoys:[["السلحفاة","turtle"],["الفيل","elephant"],["الزرافة","giraffe"],["الدب","bear"],["النمر","tiger"]]},
+
+// 31
+{t:"💻 شركات تقنية",ask:"أشهر شركات التقنية في العالم",unit:"شهرة عالمية",asof:"قائمة سهلة ومشهورة",
+src:[["Wikipedia","https://en.wikipedia.org/"]],
+items:[["Apple",1,"ابل ابل ستور iphone"],["Microsoft",2,"مايكروسوفت ويندوز windows"],["Google",3,"قوقل جوجل"],["Amazon",4,"امازون"],["NVIDIA",5,"انفيديا كرت شاشة"],["Meta",6,"ميتا فيسبوك"],["Samsung",7,"سامسونج جالكسي"],["Sony",8,"سوني بلايستيشن"],["Intel",9,"انتل معالج"],["Netflix",10,"نتفلكس"]],
+decoys:[["Uber","اوبر"],["Airbnb","اير بي ان بي"],["Spotify","سبوتيفاي"],["Adobe","ادوبي"]]},
+
+// 32
+{t:"🎨 ألوان مشهورة",ask:"ألوان أساسية ومشهورة للجميع",unit:"لون",asof:"قائمة سهلة جداً",
+src:[["Wikipedia","https://en.wikipedia.org/"]],
+items:[["الأحمر",1,"احمر red"],["الأزرق",2,"ازرق blue"],["الأصفر",3,"اصفر yellow"],["الأخضر",4,"اخضر green"],["الأسود",5,"اسود black"],["الأبيض",6,"ابيض white"],["البرتقالي",7,"برتقالي orange"],["البنفسجي",8,"بنفسجي purple"],["الوردي",9,"وردي زهري pink"],["الرمادي",10,"رمادي رصاصي gray"]],
+decoys:[["الفيروزي","turquoise"],["العنابي","maroon"],["الذهبي","gold"],["البيج","beige"]]},
+
+// 33
+{t:"🏅 رياضات عالمية",ask:"أشهر الرياضات في العالم",unit:"شهرة",asof:"قائمة سهلة ومألوفة",
+src:[["Olympics","https://olympics.com/"]],
+items:[["كرة القدم",1,"كرة قدم كورة football soccer"],["كرة السلة",2,"كرة سلة basketball"],["التنس",3,"تنس tennis"],["الكريكيت",4,"كريكيت cricket"],["السباحة",5,"سباحة swimming"],["الجري وألعاب القوى",6,"جري العاب قوى athletics"],["الملاكمة",7,"ملاكمة boxing"],["كرة الطائرة",8,"كرة طائرة volleyball"],["الجولف",9,"جولف golf"],["ركوب الدراجات",10,"دراجات سياكل cycling"]],
+decoys:[["البولينج","bowling"],["المبارزة","fencing"],["التجديف","rowing"],["المصارعة","wrestling"]]},
+
+// 34
+{t:"🍕 أكلات ووجبات مشهورة",ask:"أشهر الأكلات والوجبات حول العالم",unit:"شهرة",asof:"قائمة سهلة ولذيذة",
+src:[["Britannica","https://www.britannica.com/"]],
+items:[["البيتزا",1,"بيتزا pizza"],["البرجر",2,"برجر همبرجر burger"],["الباستا",3,"باستا مكرونة pasta"],["السوشي",4,"سوشي sushi"],["الشاورما",5,"شاورما shawarma"],["البطاطس المقلية",6,"بطاطس مقلية فرايز fries"],["الدجاج المقلي",7,"دجاج مقلي بروست fried chicken"],["التاكو",8,"تاكو taco"],["الستيك",9,"ستيك لحم steak"],["الساندويتش",10,"ساندويتش سندوتش sandwich"]],
+decoys:[["الكبسة","kabsa"],["الرامن","ramen"],["الفلافل","falafel"],["النودلز","noodles"]]},
+
+// 35
+{t:"📺 أنمي ومسلسلات",ask:"أشهر الأنمي والمسلسلات حول العالم",unit:"شهرة",asof:"قائمة ممتعة ومشهورة",
+src:[["IMDb","https://www.imdb.com/"]],
+items:[["One Piece",1,"ون بيس one piece"],["Attack on Titan",2,"هجوم العمالقة aot"],["Naruto",3,"ناروتو naruto"],["Dragon Ball",4,"دراغون بول dragon ball"],["Demon Slayer",5,"قاتل الشياطين demon slayer"],["Stranger Things",6,"سترينجر ثينجز stranger things"],["Breaking Bad",7,"بريكنق باد breaking bad"],["Game of Thrones",8,"صراع العروش got"],["Death Note",9,"مذكرة الموت death note"],["Jujutsu Kaisen",10,"جوجوتسو كايسن jjk"]],
+decoys:[["Hunter x Hunter","هنتر هنتر"],["Bleach","بليتش"],["Squid Game","لعبة الحبار"]]},
+
+// 36
+{t:"⚽ أندية عالمية",ask:"أشهر أندية كرة القدم عالمياً",unit:"شهرة تاريخية",asof:"أندية كبيرة ومشهورة",
+src:[["FIFA","https://www.fifa.com/"]],
+items:[["Real Madrid",1,"ريال مدريد real madrid"],["Barcelona",2,"برشلونة barcelona"],["Manchester United",3,"مانشستر يونايتد man utd"],["Liverpool",4,"ليفربول liverpool"],["Bayern Munich",5,"بايرن ميونخ bayern"],["Manchester City",6,"مانشستر سيتي man city"],["Juventus",7,"يوفنتوس juve"],["AC Milan",8,"ميلان milan"],["Paris Saint-Germain",9,"باريس سان جيرمان psg"],["Arsenal",10,"ارسنال arsenal"]],
+decoys:[["Chelsea","تشيلسي"],["Inter Milan","انتر ميلان"],["Atletico Madrid","اتلتيكو مدريد"]]},
+
+// 37
+{t:"🏛️ عواصم مشهورة",ask:"أشهر عواصم العالم",unit:"عاصمة",asof:"عواصم معروفة ومشهورة",
+src:[["CIA World Factbook","https://www.cia.gov/the-world-factbook/"]],
+items:[["الرياض",1,"الرياض السعودية riyadh"],["لندن",2,"لندن بريطانيا london"],["باريس",3,"باريس فرنسا paris"],["طوكيو",4,"طوكيو اليابان tokyo"],["واشنطن",5,"واشنطن امريكا washington"],["القاهرة",6,"القاهرة مصر cairo"],["روما",7,"روما ايطاليا rome"],["مدريد",8,"مدريد اسبانيا madrid"],["برلين",9,"برلين المانيا berlin"],["موسكو",10,"موسكو روسيا moscow"]],
+decoys:[["دبي","dubai"],["نيويورك","new york"],["سيدني","sydney"],["اسطنبول","istanbul"]]},
+
+// 38
+{t:"🌊 محيطات وبحار",ask:"أشهر المحيطات والبحار في العالم",unit:"مساحة / شهرة",asof:"مصادر جغرافية معروفة",
+src:[["NOAA","https://oceanservice.noaa.gov/"]],
+items:[["المحيط الهادئ",1,"الهادئ pacific"],["المحيط الأطلسي",2,"الاطلسي atlantic"],["المحيط الهندي",3,"الهندي indian"],["المحيط المتجمد الجنوبي",4,"الجنوبي southern"],["المحيط المتجمد الشمالي",5,"الشمالي arctic"],["البحر الأبيض المتوسط",6,"المتوسط mediterranean"],["البحر الأحمر",7,"الاحمر red sea"],["البحر الكاريبي",8,"الكاريبي caribbean"],["بحر الصين الجنوبي",9,"بحر الصين south china sea"],["الخليج العربي",10,"الخليج العربي arabian gulf"]],
+decoys:[["بحر قزوين","caspian"],["البحر الميت","dead sea"],["بحر البلطيق","baltic"]]},
+
+// 39
+{t:"💵 عملات مشهورة",ask:"أشهر العملات في العالم",unit:"عملة",asof:"عملات متداولة ومعروفة",
+src:[["Wikipedia","https://en.wikipedia.org/"]],
+items:[["الدولار الأمريكي",1,"دولار امريكي usd"],["اليورو",2,"يورو eur"],["الجنيه الإسترليني",3,"باوند استرليني gbp"],["الريال السعودي",4,"ريال سعودي sar"],["الين الياباني",5,"ين ياباني jpy"],["الدرهم الإماراتي",6,"درهم اماراتي aed"],["الفرنك السويسري",7,"فرنك سويسري chf"],["الدولار الكندي",8,"دولار كندي cad"],["الدولار الأسترالي",9,"دولار استرالي aud"],["اليوان الصيني",10,"يوان صيني cny"]],
+decoys:[["الدينار الكويتي","kwd"],["الجنيه المصري","egp"],["الروبية الهندية","inr"]]},
+
+// 40
+{t:"✈️ شركات طيران",ask:"أشهر شركات الطيران عالمياً",unit:"شهرة عالمية",asof:"مصادر الطيران العالمية",
+src:[["Skytrax","https://www.worldairlineawards.com/"]],
+items:[["الخطوط الجوية القطرية",1,"القطرية qatar airways"],["طيران الإمارات",2,"الامارات emirates"],["الخطوط السعودية",3,"السعودية saudia"],["الخطوط السنغافورية",4,"السنغافورية singapore airlines"],["الخطوط اليابانية (ANA)",5,"اليابانية ana all nippon"],["كاثي باسيفيك",6,"كاثي باسيفيك cathay pacific"],["الخطوط التركية",7,"التركية turkish airlines"],["لوفتهانزا",8,"لوفتهانزا lufthansa"],["الفرنسية",9,"الفرنسية air france"],["البريطانية",10,"البريطانية british airways"]],
+decoys:[["طيران الاتحاد","etihad"],["فلاي دبي","flydubai"],["مصر للطيران","egyptair"]]},
+
+// 41
+{t:"🪙 عملات رقمية",ask:"أشهر العملات الرقمية عالمياً",unit:"شهرة السوق",asof:"بيانات السوق الرقمي",
+src:[["CoinMarketCap","https://coinmarketcap.com/"]],
+items:[["Bitcoin (BTC)",1,"بيتكوين bitcoin"],["Ethereum (ETH)",2,"ايثيريوم ethereum"],["Tether (USDT)",3,"تيثر usdt"],["BNB",4,"بي ان بي binance"],["Solana (SOL)",5,"سولانا solana"],["XRP",6,"اكس ار بي ريبل ripple"],["USDC",7,"يو اس دي سي usdc"],["Cardano (ADA)",8,"كاردانو cardano"],["Dogecoin (DOGE)",9,"دوجكوين دوج دوجي"],["Tron (TRX)",10,"ترون tron"]],
+decoys:[["Litecoin","لايتكوين"],["Polkadot","بولكادوت"],["Avalanche","افالانش"]]},
+
+// 42
+{t:"🎸 آلات موسيقية",ask:"أشهر الآلات الموسيقية حول العالم",unit:"شهرة",asof:"مصادر موسيقية معروفة",
+src:[["Britannica","https://www.britannica.com/art/musical-instrument"]],
+items:[["البيانو",1,"بيانو piano"],["الجيتار",2,"جيتار قيتار guitar"],["الكمان",3,"كمان violin"],["الطبول",4,"طبول drums"],["الفلوت",5,"فلوت flute"],["العود",6,"عود oud"],["الساكسفون",7,"ساكسفون saxophone"],["التشيلو",8,"تشيلو cello"],["الهارب",9,"هارب harp"],["الأكورديون",10,"اكورديون accordion"]],
+decoys:[["القانون","qanun"],["الناي","nay"],["الربابة","rababa"]]},
+
+// 43
+{t:"🗿 معالم سياحية",ask:"أشهر المعالم السياحية في العالم",unit:"شهرة عالمية",asof:"معالم معروفة جداً",
+src:[["UNESCO","https://whc.unesco.org/"]],
+items:[["برج إيفل",1,"ايفل باريس eiffel tower"],["أهرامات الجيزة",2,"الاهرامات مصر pyramids giza"],["سور الصين العظيم",3,"سور الصين great wall"],["الكولوسيوم",4,"كولوسيوم روما colosseum"],["تاج محل",5,"تاج محل الهند taj mahal"],["تمثال الحرية",6,"تمثال الحرية نيويورك statue of liberty"],["ماتشو بيتشو",7,"ماتشو بيتشو machu picchu"],["البتراء",8,"البتراء الاردن petra"],["دار أوبرا سيدني",9,"اوبرا سيدني sydney opera house"],["بيغ بن",10,"بيغ بن لندن big ben"]],
+decoys:[["برج بيزا","leaning tower of pisa"],["ساعة مكة","clock tower"],["أبو الهول","sphinx"]]},
+
+// 44
+{t:"🏎️ ألعاب سيارات ومحاكاة",ask:"أشهر ألعاب السيارات والمحاكاة",unit:"شهرة عالمية",asof:"ألعاب سباقات ومحاكاة",
+src:[["IGDB","https://www.igdb.com/"]],
+items:[["Forza Horizon",1,"فورزا هورايزن forza"],["Gran Turismo",2,"قران توريزمو gt"],["Need for Speed",3,"نيد فور سبيد nfs"],["BeamNG.drive",4,"بيم ان جي beamng"],["Euro Truck Simulator 2",5,"محاكي الشاحنات ets2"],["Assetto Corsa",6,"اسيتو كورسا assetto"],["Rocket League",7,"روكيت ليق rocket league"],["Mario Kart",8,"ماريو كارت mario kart"],["F1 (EA Sports)",9,"فورمولا 1 f1"],["Microsoft Flight Simulator",10,"محاكي الطيران flight simulator"]],
+decoys:[["The Crew","ذا كرو"],["Dirt Rally","ديرت رالي"],["iRacing","اي ريسنق"]]},
+
+// 45
+{t:"📡 منصات البث والمشاهدة",ask:"أشهر منصات البث والمسلسلات عالمياً",unit:"شهرة",asof:"منصات رقمية معروفة",
+src:[["JustWatch","https://www.justwatch.com/"]],
+items:[["Netflix",1,"نتفلكس netflix"],["YouTube",2,"يوتيوب youtube"],["Twitch",3,"تويتش twitch"],["Disney+",4,"ديزني بلس disney"],["Amazon Prime Video",5,"برايم فيديو prime"],["Kick",6,"كيك kick"],["Shahid",7,"شاهد mbc shahid"],["Apple TV+",8,"ابل تي في apple tv"],["Hulu",9,"هولو hulu"],["HBO Max",10,"اتش بي او max"]],
+decoys:[["OSN+","او اس ان"],["Starzplay","ستارزبلاي"],["Crunchyroll","كرانشي رول"]]},
+
+// 46
+{t:"📷 كاميرات وتصوير",ask:"أشهر ماركات الكاميرات والتصوير",unit:"شهرة",asof:"عالم التصوير الفوتوغرافي",
+src:[["DPReview","https://www.dpreview.com/"]],
+items:[["Sony",1,"سوني sony"],["Canon",2,"كانون canon"],["Nikon",3,"نيكون nikon"],["Fujifilm",4,"فوجي فيلم fujifilm"],["GoPro",5,"قو برو gopro"],["DJI",6,"دي جي اي dji"],["Leica",7,"لايكا leica"],["Panasonic Lumix",8,"باناسونيك لوميكس lumix"],["Olympus",9,"اوليمبوس olympus"],["Insta360",10,"انستا 360 insta360"]],
+decoys:[["Hasselblad","هاسيلبلاد"],["Pentax","بنتاكس"],["Kodak","كوداك"]]},
+
+// 47
+{t:"👑 أساطير كرة القدم",ask:"أشهر أساطير كرة القدم عبر التاريخ",unit:"تأثير وشهرة",asof:"نجوم تاريخيون",
+src:[["FIFA","https://www.fifa.com/"]],
+items:[["ليونيل ميسي",1,"ميسي messi"],["كريستيانو رونالدو",2,"رونالدو ronaldo cr7"],["بيليه",3,"بيليه pele"],["دييغو مارادونا",4,"مارادونا maradona"],["زين الدين زيدان",5,"زيدان zidane"],["رونالدو الظاهرة",6,"رونالدو البرازيلي r9"],["رونالدينيو",7,"رونالدينهو ronaldinho"],["يوهان كرويف",8,"كرويف cruyff"],["تييري هنري",9,"هنري henry"],["لوكا مودريتش",10,"مودريتش modric"]],
+decoys:[["نيمار","neymar"],["محمد صلاح","salah"],["كريم بنزيما","benzema"]]},
+
+// 48
+{t:"🦸 أبطال خارقون",ask:"أشهر الأبطال الخارقين في السينما والكوميكس",unit:"شهرة",asof:"عالم مارفل ودي سي",
+src:[["IMDb","https://www.imdb.com/"]],
+items:[["Spider-Man",1,"سبايدرمان الرجل العنكبوت"],["Batman",2,"باتمان الرجل الوطواط"],["Superman",3,"سوبرمان"],["Iron Man",4,"ايرون مان الرجل الحديدي"],["Captain America",5,"كابتن امريكا"],["Thor",6,"ثور"],["Hulk",7,"هالك الرجل الاخضر"],["Wonder Woman",8,"وندر ومان"],["Deadpool",9,"ديدبول"],["Wolverine",10,"ولفرين"]],
+decoys:[["Flash","فلاش"],["Aquaman","اكوامان"],["Doctor Strange","دكتور سترينج"]]},
+
+// 49
+{t:"⚽ أندية عربية شهيرة",ask:"أشهر أندية كرة القدم العربية",unit:"شعبية وبطولات",asof:"أندية عربية كبرى",
+src:[["AFC / CAF","https://www.the-afc.com/"]],
+items:[["الهلال",1,"الهلال السعودي al hilal"],["النصر",2,"النصر السعودي al nassr"],["الأهلي المصري",3,"الاهلي المصري al ahly"],["الاتحاد",4,"الاتحاد السعودي al ittihad"],["الزمالك المصري",5,"الزمالك zamalek"],["الأهلي السعودي",6,"الاهلي السعودي al ahli"],["الترجي التونسي",7,"الترجي esperance"],["الرجاء المغربي",8,"الرجاء raja"],["الوداد المغربي",9,"الوداد wydad"],["العين الإماراتي",10,"العين al ain"]],
+decoys:[["الشباب","al shabab"],["السد","al sadd"],["الفتح","al fateh"]]},
+
+// 50
+{t:"💡 اختراعات غيرت العالم",ask:"أشهر الاختراعات التي غيرت حياة البشر",unit:"أهمية تاريخية",asof:"تاريخ العلوم",
+src:[["Britannica","https://www.britannica.com/"]],
+items:[["الكهرباء",1,"كهرباء electricity"],["الإنترنت",2,"انترنت internet"],["الهاتف",3,"تلفون جوال هاتف telephone"],["السيارة",4,"سيارة car automobile"],["الطائرة",5,"طيارة طائرة airplane"],["الحاسوب (الكمبيوتر)",6,"كمبيوتر حاسوب computer"],["المطبعة",7,"مطبعة printing press"],["البوصلة",8,"بوصلة compass"],["التلفاز",9,"تلفزيون تلفاز television"],["المصباح الكهربائي",10,"لمبة مصباح light bulb"]],
+decoys:[["الراديو","radio"],["الساعة","clock"],["الكاميرا","camera"]]},
+
+// 51
+{t:"🌐 مواقع وأدوات تقنية",ask:"أشهر المواقع والأدوات التقنية على الإنترنت",unit:"استخدام يومي",asof:"عالم الويب",
+src:[["Similarweb","https://www.similarweb.com/"]],
+items:[["Google",1,"قوقل جوجل google"],["YouTube",2,"يوتيوب youtube"],["ChatGPT",3,"شات جي بي تي chatgpt"],["Wikipedia",4,"ويكيبيديا wikipedia"],["Amazon",5,"امازون amazon"],["GitHub",6,"جيت هاب github"],["Canva",7,"كانفا canva"],["Zoom",8,"زوم zoom"],["Gmail",9,"جيميل gmail"],["Google Maps",10,"خرائط قوقل maps"]],
+decoys:[["Dropbox","دروب بوكس"],["Notion","نوشن"],["Trello","تريلو"]]},
+
+// 52 — إسلاميات 1
+{t:"🕌 سور القرآن المشهورة",ask:"من أشهر سور القرآن الكريم المعروفة للجميع",unit:"سورة قرآنية",asof:"القرآن الكريم — المصحف الشريف",
+src:[["مجمع الملك فهد لطباعة المصحف","https://qurancomplex.gov.sa/"]],
+items:[["الفاتحة",1,"فاتحة الكتاب ام الكتاب"],["البقرة",2,"سورة البقرة"],["الإخلاص",3,"قل هو الله احد اخلاص"],["الفلق",4,"قل اعوذ برب الفلق فلق"],["الناس",5,"قل اعوذ برب الناس ناس"],["يس",6,"يس ياسين"],["الملك",7,"تبارك ملك تبارك الذي بيده الملك"],["الكهف",8,"سورة الكهف جمعة"],["الرحمن",9,"سورة الرحمن"],["الواقعة",10,"سورة الواقعة"]],
+decoys:[["الضحى","ضحى"],["العصر","عصر"],["القارعة","قارعة"],["القدر","قدر"]]},
+
+// 53 — إسلاميات 2
+{t:"📿 أركان الإسلام والصلوات",ask:"الصلوات الخمس وأركان الإسلام المعروفة",unit:"شعيرة إسلامية",asof:"صحيح البخاري وصحيح مسلم",
+src:[["الدرر السنية","https://dorar.net/"]],
+items:[["الفجر",1,"صلاة الفجر صبح"],["الظهر",2,"صلاة الظهر"],["العصر",3,"صلاة العصر"],["المغرب",4,"صلاة المغرب"],["العشاء",5,"صلاة العشاء"],["الشهادتان",6,"شهادة ان لا اله الا الله محمد رسول الله"],["إقام الصلاة",7,"الصلاة"],["إيتاء الزكاة",8,"الزكاة"],["صوم رمضان",9,"الصيام رمضان"],["حج البيت",10,"الحج مكة"]],
+decoys:[["الوتر","وتر"],["الضحى","صلاة الضحى"],["التراويح","تراويح"],["العمرة","عمرة"]]},
+
+// 54 — إسلاميات 3
+{t:"🕋 أشهر المساجد في التاريخ الإسلامي",ask:"من أشهر وأعرق المساجد في العالم الإسلامي",unit:"مسجد شهير",asof:"كتب التاريخ والسيرة واليونسكو",
+src:[["الدرر السنية","https://dorar.net/"],["UNESCO","https://whc.unesco.org/"]],
+items:[["المسجد الحرام",1,"مكة الكعبة الحرام"],["المسجد النبوي",2,"المدينة المنورة النبوي"],["المسجد الأقصى",3,"القدس الاقصى"],["مسجد قباء",4,"قباء المدينة"],["مسجد القبلتين",5,"القبلتين المدينة"],["جامع الأزهر",6,"الازهر مصر القاهرة"],["الجامع الأموي",7,"الاموي دمشق سوريا"],["مسجد قرطبة",8,"قرطبة الاندلس اسبانيا"],["جامع القيروان",9,"القيروان تونس"],["مسجد السلطان أحمد",10,"الازرق اسطنبول تركيا"]],
+decoys:[["مسجد الفتاح العليم","الفتاح العليم"],["مسجد الحسن الثاني","الحسن الثاني"],["مسجد الشيخ زايد","الشيخ زايد"]]},
+
+// 55 — السعودية 1
+{t:"🇸🇦 مدن ومعالم السعودية",ask:"أشهر المدن والوجهات السعودية المعروفة",unit:"مدينة / وجهة",asof:"المملكة العربية السعودية",
+src:[["Visit Saudi","https://www.visitsaudi.com/"]],
+items:[["الرياض",1,"الرياض riyadh"],["جدة",2,"جدة jeddah"],["مكة المكرمة",3,"مكة makkah"],["المدينة المنورة",4,"المدينة madinah"],["الخبر",5,"الخبر khobar"],["الدمام",6,"الدمام dammam"],["العلا",7,"العلأ العلا alula"],["أبها",8,"أبها ابها عسير abha"],["الطائف",9,"الطائف taif"],["الدرعية",10,"الدرعية diriyah"]],
+decoys:[["تبوك","tabuk"],["حائل","hail"],["نجران","najran"],["ينبع","yanbu"]]},
+
+// 56 — السعودية 2
+{t:"⚽ أندية دوري روشن السعودي",ask:"أشهر الأندية السعودية في كرة القدم",unit:"نادي سعودي",asof:"الدوري السعودي",
+src:[["SAFF","https://www.saff.com.sa/"]],
+items:[["الهلال",1,"الهلال al hilal"],["النصر",2,"النصر al nassr"],["الاتحاد",3,"الاتحاد al ittihad"],["الأهلي",4,"الاهلي al ahli"],["الشباب",5,"الشباب al shabab"],["التعاون",6,"التعاون taawoun"],["الفتح",7,"الفتح al fateh"],["الاتفاق",8,"الاتفاق ettifaq"],["الرائد",9,"الرائد raed"],["القادسية",10,"القادسية qadsiah"]],
+decoys:[["الفيحاء","fayha"],["الخليج","khaleej"],["ضمك","damac"],["الوحدة","wehda"]]},
+
+// 57 — السعودية 3
+{t:"🍽️ أكلات شعبية سعودية",ask:"أشهر الأكلات الشعبية في السعودية",unit:"أكلة شعبية",asof:"المطبخ السعودي",
+src:[["Visit Saudi","https://www.visitsaudi.com/"]],
+items:[["الكبسة",1,"كبسة kabsa"],["الجريش",2,"جريش jareesh"],["القرصان",3,"قرصان qursan"],["السليق",4,"سليق saleeq"],["المندي",5,"مندي mandi"],["الحنيذ",6,"حنيذ haneeth"],["المصابيب",7,"مصابيب مراصيع"],["العريكة",8,"عريكة areekah"],["المعصوب",9,"معصوب masoob"],["الكليجا",10,"كليجا القصيم kleja"]],
+decoys:[["المفطح","مفطح"],["الثريد","ثريد"],["القشد","قشد"]]},
+
+// 58 — السعودية 4
+{t:"🚀 مشاريع ووجهات السعودية",ask:"من أبرز المشاريع والوجهات الكبرى في السعودية",unit:"مشروع / وجهة",asof:"مشاريع السعودية",
+src:[["Vision 2030","https://www.vision2030.gov.sa/"]],
+items:[["القدية",1,"القدية qiddiya"],["نيوم",2,"نيوم neom"],["البحر الأحمر",3,"البحر الاحمر red sea"],["الدرعية",4,"الدرعية diriyah"],["العلا",5,"العلا alula"],["ذا لاين",6,"ذا لاين the line"],["المكعب",7,"المكعب murabba"],["سندالة",8,"سندالة sindalah"],["أمالا",9,"أمالا amaala"],["روشن",10,"روشن roshn"]],
+decoys:[["تروجينا","trojena"],["أوكساغون","oxagon"],["حدائق الملك سلمان","الملك سلمان"]]},
+
+// 59 — إسلاميات 4: العشرة المبشرون بالجنة
+{t:"🌟 العشرة المبشرون بالجنة",ask:"العشرة المبشرون بالجنة رضي الله عنهم",unit:"صحابي جليل",asof:"مسند الإمام أحمد وسنن الترمذي",
+src:[["الدرر السنية","https://dorar.net/"],["إسلام ويب","https://www.islamweb.net/"]],
+items:[["أبو بكر الصديق",1,"ابو بكر الصديق رضي الله عنه"],["عمر بن الخطاب",2,"عمر الفاروق رضي الله عنه"],["عثمان بن عفان",3,"عثمان ذو النورين رضي الله عنه"],["علي بن أبي طالب",4,"علي بن ابي طالب رضي الله عنه"],["طلحة بن عبيد الله",5,"طلحة رضي الله عنه"],["الزبير بن العوام",6,"الزبير رضي الله عنه"],["عبد الرحمن بن عوف",7,"عبد الرحمن بن عوف رضي الله عنه"],["سعد بن أبي وقاص",8,"سعد بن ابي وقاص رضي الله عنه"],["سعيد بن زيد",9,"سعيد بن زيد رضي الله عنه"],["أبو عبيدة عامر بن الجراح",10,"ابو عبيدة عامر بن الجراح امين الامة"]],
+decoys:[["بلال بن رباح","بلال رضي الله عنه"],["خالد بن الوليد","خالد بن الوليد رضي الله عنه"],["حمزة بن عبد المطلب","حمزة رضي الله عنه"],["معاذ بن جبل","معاذ بن جبل رضي الله عنه"]]},
+
+// 60 — إسلاميات 5: أوائل من آمن وصدّق من الصحابة
+{t:"🤍 أوائل من صدّق وآمن",ask:"من أوائل من آمن وصدّق بالنبي ﷺ من الصحابة الكرام",unit:"السابقون الأولون",asof:"السيرة النبوية والدرر السنية",
+src:[["الدرر السنية","https://dorar.net/"],["إسلام ويب","https://www.islamweb.net/"]],
+items:[["خديجة بنت خويلد",1,"خديجة ام المؤمنين رضي الله عنها"],["أبو بكر الصديق",2,"ابو بكر الصديق رضي الله عنه"],["علي بن أبي طالب",3,"علي بن ابي طالب رضي الله عنه"],["زيد بن حارثة",4,"زيد بن حارثة رضي الله عنه"],["عثمان بن عفان",5,"عثمان بن عفان رضي الله عنه"],["الزبير بن العوام",6,"الزبير بن العوام رضي الله عنه"],["عبد الرحمن بن عوف",7,"عبد الرحمن بن عوف رضي الله عنه"],["سعد بن أبي وقاص",8,"سعد بن ابي وقاص رضي الله عنه"],["طلحة بن عبيد الله",9,"طلحة بن عبيد الله رضي الله عنه"],["أبو عبيدة عامر بن الجراح",10,"ابو عبيدة بن الجراح رضي الله عنه"]],
+decoys:[["عمر بن الخطاب","عمر بن الخطاب رضي الله عنه"],["خالد بن الوليد","خالد بن الوليد رضي الله عنه"],["أبو هريرة","ابو هريرة رضي الله عنه"]]},
+
+// 61 — إسلاميات 6: أشهر كتب الحديث النبوي
+{t:"📚 أشهر كتب الحديث النبوي",ask:"من أشهر كتب الحديث النبوي المعتمدة",unit:"كتاب حديثي",asof:"علوم الحديث — الدرر السنية",
+src:[["الدرر السنية","https://dorar.net/"],["إسلام ويب","https://www.islamweb.net/"]],
+items:[["صحيح البخاري",1,"البخاري صحيح البخاري"],["صحيح مسلم",2,"مسلم صحيح مسلم"],["سنن أبي داود",3,"ابو داود سنن ابي داود"],["سنن الترمذي",4,"الترمذي سنن الترمذي"],["سنن النسائي",5,"النسائي سنن النسائي"],["سنن ابن ماجه",6,"ابن ماجه سنن ابن ماجه"],["موطأ مالك",7,"الموطا الامام مالك"],["مسند الإمام أحمد",8,"مسند احمد بن حنبل"],["سنن الدارمي",9,"الدارمي سنن الدارمي"],["صحيح ابن حبان",10,"ابن حبان صحيح ابن حبان"]],
+decoys:[["رياض الصالحين","رياض الصالحين"],["الأربعون النووية","الاربعون النووية"],["بلوغ المرام","بلوغ المرام"]]},
+
+// 62 — إسلاميات 7: أشهر الأنبياء والرسل في القرآن
+{t:"🕊️ أنبياء ورسل في القرآن",ask:"من أشهر الأنبياء والرسل المذكورين في القرآن الكريم",unit:"نبي / رسول",asof:"القرآن الكريم ومجمع الملك فهد",
+src:[["مجمع الملك فهد لطباعة المصحف","https://qurancomplex.gov.sa/"],["الدرر السنية","https://dorar.net/"]],
+items:[["نوح عليه السلام",1,"نوح عليه السلام"],["إبراهيم عليه السلام",2,"ابراهيم خليل الله"],["موسى عليه السلام",3,"موسى كليم الله"],["عيسى عليه السلام",4,"عيسى بن مريم"],["محمد ﷺ",5,"محمد رسول الله صلى الله عليه وسلم"],["يوسف عليه السلام",6,"يوسف عليه السلام"],["يونس عليه السلام",7,"يونس ذو النون"],["سليمان عليه السلام",8,"سليمان عليه السلام"],["داود عليه السلام",9,"داود عليه السلام"],["آدم عليه السلام",10,"ادم ابو البشر"]],
+decoys:[["الخضر","الخضر"],["لقمان","لقمان"],["ذو القرنين","ذو القرنين"]]}
+];
+
+var CLUES_DATA={
+  t:"🕵️‍♂️ خمّن بالوصف",
+  ask:"اقرأ الوصف وخمّن العنصر الصحيح!",
+  unit:"نقاط ذكاء",
+  asof:"طور الألغاز والوصف الذكي",
+  src:[["Top 10 Clues","https://www.britannica.com/"]],
+  items:[
+    ["Minecraft",1,"ماين كرافت ماينكرافت","وصف: لعبة مكعبات وبناء عالم مفتوح مشهورة جداً"],
+    ["برج خليفة",2,"برج خليفة دبي burj khalifa","وصف: أطول مبنى مكتمل في العالم ويقع في دبي"],
+    ["المشتري",3,"المشتري jupiter","وصف: أضخم كوكب في المجموعة الشمسية"],
+    ["نيمار",4,"نيمار neymar","وصف: صاحب أغلى صفقة انتقال في تاريخ كرة القدم"],
+    ["النيل",5,"النيل nile","وصف: من أطول وأشهر أنهار العالم ويمر بمصر"],
+    ["القهوة",6,"القهوة coffee","وصف: مشروب صباحي شهير يُحضّر من حبوب محمصة"],
+    ["الفهد الصياد",7,"الفهد فهد صياد cheetah","وصف: أسرع حيوان بري على وجه الأرض"],
+    ["Bitcoin (BTC)",8,"بيتكوين bitcoin btc","وصف: أشهر وأول عملة رقمية مشفرة عالمياً"],
+    ["البيتزا",9,"البيتزا pizza","وصف: أكلة إيطالية شهيرة بالجبن والصلصة"],
+    ["الرياض",10,"الرياض riyadh","وصف: عاصمة المملكة العربية السعودية"]
+  ],
+  decoys:[["Fortnite","فورتنايت"],["زحل","saturn"],["الأسد","lion"],["الشاي","tea"],["دبي","dubai"],["البرجر","burger"]]
+};
+
+var COUNTRIES=[["أفغانستان","afghanistan"],["ألمانيا","germany"],["الأرجنتين","argentina"],["الأردن","jordan"],["الإمارات","uae emirates"],["البرازيل","brazil"],["البحرين","bahrain"],["الجزائر","algeria"],["السعودية","saudi المملكة"],["السودان","sudan"],["الصين","china"],["العراق","iraq"],["الكويت","kuwait"],["المغرب","morocco"],["المكسيك","mexico"],["الهند","india"],["الولايات المتحدة","usa امريكا"],["اليابان","japan"],["اليمن","yemen"],["إثيوبيا","ethiopia"],["إسبانيا","spain"],["إندونيسيا","indonesia"],["أستراليا","australia"],["إيران","iran"],["إيطاليا","italy"],["أوكرانيا","ukraine"],["باكستان","pakistan"],["بريطانيا","uk britain"],["بنغلاديش","bangladesh"],["بولندا","poland"],["تايلاند","thailand"],["تركيا","turkey"],["تونس","tunisia"],["جنوب أفريقيا","south africa"],["روسيا","russia"],["سوريا","syria"],["سويسرا","switzerland"],["فرنسا","france"],["فنزويلا","venezuela"],["فيتنام","vietnam"],["قطر","qatar"],["كازاخستان","kazakhstan"],["كندا","canada"],["كولومبيا","colombia"],["كوريا الجنوبية","south korea"],["كينيا","kenya"],["لبنان","lebanon"],["ليبيا","libya"],["ماليزيا","malaysia"],["مصر","egypt"],["نيجيريا","nigeria"],["النرويج","norway"],["نيوزيلندا","new zealand"],["هولندا","netherlands"],["اليونان","greece"],["الفلبين","philippines"],["عُمان","oman عمان"],["الكونغو","congo"],["تنزانيا","tanzania"],["أنغولا","angola"],["بيرو","peru"],["تشيلي","chile"],["السويد","sweden"],["الدنمارك","denmark"],["أوزبكستان","uzbekistan"],["السنغال","senegal"],["غانا","ghana"],["منغوليا","mongolia"],["فنلندا","finland"],["أيسلندا","iceland"],["كوبا","cuba"],["مدغشقر","madagascar"],["نيبال","nepal"],["سنغافورة","singapore"],["الصومال","somalia"],["موريتانيا","mauritania"],["أوغندا","uganda"],["البرتغال","portugal"],["النمسا","austria"],["بلجيكا","belgium"],["أيرلندا","ireland"],["رومانيا","romania"],["المجر","hungary"],["التشيك","czech"],["سريلانكا","sri lanka"],["ميانمار","myanmar"],["كمبوديا","cambodia"],["إسرائيل","israel"],["الأوروغواي","uruguay"],["الإكوادور","ecuador"]];
+var STATES=[["فلوريدا","florida"],["نيويورك","new york"],["بنسلفانيا","pennsylvania"],["إيلينوي","illinois"],["أوهايو","ohio"],["جورجيا","georgia"],["ميشيغان","michigan"],["واشنطن","washington"],["أيداهو","idaho"],["يوتا","utah"],["كانساس","kansas"],["نبراسكا","nebraska"],["داكوتا الشمالية","north dakota"],["داكوتا الجنوبية","south dakota"],["مينيسوتا","minnesota"],["أوكلاهوما","oklahoma"],["ميسوري","missouri"],["هاواي","hawaii"],["ماين","maine"],["فيرمونت","vermont"],["كنتاكي","kentucky"],["تينيسي","tennessee"],["أيوا","iowa"],["أركنساس","arkansas"],["لويزيانا","louisiana"],["ألاباما","alabama"],["ويسكونسن","wisconsin"],["إنديانا","indiana"],["نيوجيرسي","new jersey"],["فيرجينيا","virginia"],["ماساتشوستس","massachusetts"],["ماريلاند","maryland"],["كونيتيكت","connecticut"],["ديلاوير","delaware"],["رود آيلاند","rhode island"],["ميسيسيبي","mississippi"],["ساوث كارولاينا","south carolina"],["نيو هامبشاير","new hampshire"],["فيرجينيا الغربية","west virginia"]];
+
+var RANKS=[
+  [1,"مبتدئ روقان"],
+  [3,"صياد قوائم"],
+  [6,"قناص مراكز"],
+  [10,"خبير تحديات"],
+  [15,"أسطورة توب 10"]
+];
+
+function getRankTitle(level){
+  var title=RANKS[0][1];
+  for(var i=0;i<RANKS.length;i++){
+    if(level>=RANKS[i][0])title=RANKS[i][1];
+  }
+  return title;
+}
+
+var $=function(i){return document.getElementById(i)};
+function norm(s){return String(s).toLowerCase().replace(/[\u064B-\u065F\u0640]/g,"").replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/\s+/g," ").trim()}
+function fmt(v){return v%1?v.toFixed(1):v.toLocaleString("en-US")}
+
+var L,pool,found,tried,peeks,lives,over,streak=0,xp=0,muted=false,autoNotify=true,AC=null;
+var curCat=27, mode="normal", isCluesMode=false, completed={};
+var tabFilter="all", timerEnabled=false, elapsedSec=0, timerId=null;
+var customIndices=[];
+var aiAnswerVault={};
+var publicPlayerName="مقرن";
+var publicLeaderboard={};
+
+/* حالة اللعب الجماعي واستعانة بصديق */
+var pNames=["لاعب 1","لاعب 2"], pScores=[0,0], pWins=[0,0], currentTurn=0, roundNum=1;
+var pDoubleLeft=[1,1], pDoubleArmed=[false,false], pPeekLeft=[1,1], pFriendLeft=[1,1];
+var bombEnabled=false, bombSec=15, bombDuration=15, bombId=null;
+var friendTimerId=null, friendSecLeft=60, friendCallerTurn=0;
+
+/* سجل الأرقام القياسية */
+var hof={bestStreak:0,bestRush:0,multiWins:0};
+
+var rushDuration=60, rushLeft=60, rushId=null;
+
+function syncPublicLeaderboard(){
+  var info=refreshXPUI();
+  publicLeaderboard[publicPlayerName]={
+    name:publicPlayerName,
+    xp:xp,
+    level:info.level,
+    rank:info.rankName,
+    completed:getCompletedCount(),
+    bestStreak:hof.bestStreak,
+    updatedAt:Date.now()
+  };
+}
+
+function saveState(){
+  syncPublicLeaderboard();
+  try{
+    localStorage.setItem("top10_public_shared_v1",JSON.stringify({
+      playerName:publicPlayerName,
+      leaderboard:publicLeaderboard,
+      xp:xp,
+      muted:muted,
+      autoNotify:autoNotify,
+      completed:completed,
+      hof:hof
+    }));
+  }catch(e){}
+}
+
+function loadState(){
+  try{
+    var raw=localStorage.getItem("top10_public_shared_v1")||localStorage.getItem("top10_save_v11");
+    if(!raw)return;
+    var s=JSON.parse(raw);
+    if(s.playerName)publicPlayerName=String(s.playerName).trim()||"مقرن";
+    if(s.leaderboard&&typeof s.leaderboard==="object")publicLeaderboard=s.leaderboard;
+    if(typeof s.xp==="number")xp=s.xp;
+    if(typeof s.muted==="boolean")muted=s.muted;
+    if(typeof s.autoNotify==="boolean")autoNotify=s.autoNotify;
+    if(s.completed&&typeof s.completed==="object")completed=s.completed;
+    if(s.hof&&typeof s.hof==="object"){
+      hof.bestStreak=s.hof.bestStreak||0;
+      hof.bestRush=s.hof.bestRush||0;
+      hof.multiWins=s.hof.multiWins||0;
+    }
+  }catch(e){}
+}
+
+function refreshPublicPlayerUI(){
+  if($("pub-player-name"))$("pub-player-name").textContent=publicPlayerName;
+}
+
+function renderLeaderboard(){
+  syncPublicLeaderboard();
+  var list=Object.keys(publicLeaderboard).map(function(k){return publicLeaderboard[k]});
+  if(!list.length){
+    list.push({name:publicPlayerName,xp:xp,level:Math.floor(xp/100)+1,rank:getRankTitle(Math.floor(xp/100)+1),completed:getCompletedCount()});
+  }
+  list.sort(function(a,b){return (b.xp||0)-(a.xp||0)});
+  $("lb-list").innerHTML=list.map(function(entry,i){
+    var medal=i===0?"🥇":(i===1?"🥈":(i===2?"🥉":("#"+(i+1))));
+    var isMe=(entry.name===publicPlayerName);
+    return '<div class="lb-row'+(isMe?" me":"")+'">'+
+      '<div><span>'+medal+' '+entry.name+'</span><br><small style="color:var(--mut);font-weight:700">'+(entry.rank||"مبتدئ روقان")+' • مستوى '+(entry.level||1)+' • مختوم: '+(entry.completed||0)+'</small></div>'+
+      '<span style="color:var(--ac)">'+(entry.xp||0)+' XP</span>'+
+    '</div>';
+  }).join("");
+}
+
+$("pub-rename-btn").onclick=function(){
+  var nextName=prompt("اكتب الاسم العام الجديد للاعب:",publicPlayerName);
+  if(nextName===null)return;
+  var clean=nextName.trim();
+  if(!clean)return;
+  publicPlayerName=clean.slice(0,24);
+  refreshPublicPlayerUI();
+  saveState();
+  notify("تم تحديث اسم اللاعب العام 👤","الاسم الحالي: "+publicPlayerName,"ok","👤");
+};
+
+$("pub-lb-btn").onclick=function(){
+  renderLeaderboard();
+  $("lb-ov").classList.add("open");
+};
+$("lb-x").onclick=function(){$("lb-ov").classList.remove("open")};
+$("lb-ov").onclick=function(e){if(e.target.id==="lb-ov")$("lb-ov").classList.remove("open")};
+
+window.addEventListener("storage",function(e){
+  if(e.key==="top10_public_shared_v1"){
+    loadState();
+    refreshPublicPlayerUI();
+    refreshXPUI();
+    refreshHofUI();
+    renderTabs();
+    if($("lb-ov").classList.contains("open"))renderLeaderboard();
+  }
+});
+
+function refreshHofUI(){
+  if(streak>hof.bestStreak)hof.bestStreak=streak;
+  $("hof-streak").textContent="🏅 أطول سلسلة: "+hof.bestStreak;
+  $("hof-rush").textContent="⚡ أفضل سباق: "+hof.bestRush+"/10";
+  $("hof-wins").textContent="👑 انتصارات الجماعي: "+hof.multiWins;
+  saveState();
+}
+
+function escapeRegExp(str){
+  return str.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+}
+
+function highlightMatch(text, query){
+  var qClean=query.trim();
+  if(!qClean)return text;
+  try{
+    var re=new RegExp("("+escapeRegExp(qClean)+")","ig");
+    return text.replace(re,"<mark>$1</mark>");
+  }catch(e){
+    return text;
+  }
+}
+
+function unlockAudio(){
+  try{
+    var AudioCtx=window.AudioContext||window.webkitAudioContext;
+    if(!AudioCtx)return null;
+    if(!AC)AC=new AudioCtx();
+    if(AC.state==="suspended")AC.resume().catch(function(){});
+    return AC;
+  }catch(e){
+    return null;
+  }
+}
+
+function tone(seq,type,vol){
+  if(muted)return;
+  try{
+    var ctx=unlockAudio();
+    if(!ctx)return;
+    var playNow=function(){
+      var t=ctx.currentTime + 0.01;
+      seq.forEach(function(n,i){
+        var o=ctx.createOscillator(),g=ctx.createGain();
+        o.type=type||"sine";
+        o.frequency.setValueAtTime(n,t+i*.11);
+        g.gain.setValueAtTime(vol||.18,t+i*.11);
+        g.gain.exponentialRampToValueAtTime(.001,t+i*.11+.22);
+        o.connect(g);g.connect(ctx.destination);o.start(t+i*.11);
+        o.stop(t+i*.11+.24);
+      });
+    };
+    if(ctx.state==="suspended"){
+      ctx.resume().then(playNow).catch(playNow);
+    }else{
+      playNow();
+    }
+  }catch(e){}
+}
+
+document.addEventListener("pointerdown",function(){
+  if(!muted)unlockAudio();
+},{passive:true});
+
+function notifyTone(){
+  tone([659.25, 880], "triangle", 0.16);
+}
+
+function refreshXPUI(){
+  var level=Math.floor(xp/100)+1;
+  var rankName=getRankTitle(level);
+  $("xp").textContent=xp+" XP";
+  $("lvl").textContent="مستوى "+level;
+  $("rank-title").textContent=rankName;
+  return {level:level,rankName:rankName};
+}
+
+function addXP(amount){
+  var before=refreshXPUI();
+  xp+=Math.max(0,amount);
+  var after=refreshXPUI();
+  saveState();
+  if(after.rankName!==before.rankName){
+    notify("لقب جديد! 👑","صرت «"+after.rankName+"» — كفو والله!","ok","👑");
+  }else if(after.level>before.level){
+    notify("ترقية مستوى! 🎉","وصلت للمستوى "+after.level+" — استمر!","ok","🏅");
+  }
+}
+
+function notify(title,sub,kind,icon,silent){
+  var box=$("toast-box");
+  var t=document.createElement("div");
+  var ic=icon||(kind==="ok"?"✅":(kind==="bad"?"❌":"✨"));
+  t.className="toast "+(kind||"info");
+  t.innerHTML='<span class="t-ic">'+ic+'</span><div class="t-txt">'+title+(sub?'<small>'+sub+'</small>':'')+'</div>';
+  box.appendChild(t);
+  if(box.children.length>2)box.firstElementChild.remove();
+  if(!silent)notifyTone();
+  setTimeout(function(){
+    t.classList.add("hide-toast");
+    setTimeout(function(){if(t.parentNode)t.remove()},260);
+  },3200);
+}
+
+var AUTO_NOTES=[
+  ["اصنع كاتقوري بنفسك ✨","اطلب من المساعد الذكي أي موضوع تبيه ويضيفه لك بإجاباته ومموهاته في البحث فوراً!","info","✨"],
+  ["اذكر الله 🌿","سبحان الله وبحمده، سبحان الله العظيم","info","🌿"],
+  ["خليك مبسوط 😄","الضحكة والروقان أحلى شي في اليوم","info","😄"],
+  ["استغفر ربك ✨","أستغفر الله العظيم وأتوب إليه","info","✨"],
+  ["صلِّ على النبي ﷺ","اللهم صلِّ وسلم على نبينا محمد","info","🤍"]
+];
+var noteIdx=0;
+setInterval(function(){
+  if(!autoNotify)return;
+  var item=AUTO_NOTES[noteIdx % AUTO_NOTES.length];
+  noteIdx++;
+  notify(item[0],item[1],item[2],item[3]);
+},22000);
+
+function updateTopButtonsUI(){
+  $("snd").textContent=muted?"🔇":"🔊";
+  $("auto-bell").textContent=autoNotify?"🔔":"🔕";
+  $("auto-bell").classList.toggle("off",!autoNotify);
+}
+
+$("auto-bell").onclick=function(){
+  autoNotify=!autoNotify;
+  updateTopButtonsUI();
+  saveState();
+  notify(
+    autoNotify?"تشغيل الإشعارات التلقائية":"إيقاف الإشعارات التلقائية",
+    autoNotify?"راح تجيك رسائل وتنبيهات كل فترة":"تم إيقاف التنبيهات التلقائية مؤقتاً",
+    "info",
+    autoNotify?"🔔":"🔕"
+  );
+};
+
+$("snd").onclick=function(){
+  muted=!muted;
+  updateTopButtonsUI();
+  saveState();
+  if(!muted){
+    unlockAudio();
+    tone([523.25,659.25,783.99],"sine",0.18);
+    notify("تم تشغيل الصوت","المؤثرات الصوتية شغالة الآن","info","🔊",true);
+  }else{
+    notify("تم كتم الصوت","تم إيقاف المؤثرات الصوتية","info","🔇",true);
+  }
+};
+
+function updateSpecialCardsUI(){
+  $("mc-multi").classList.toggle("active", mode==="multi");
+  $("mc-rush").classList.toggle("active", mode==="rush");
+  $("mc-clues").classList.toggle("active", mode==="clues");
+  $("mc-blind").classList.toggle("active", mode==="blind");
+}
+
+function getCurrentAskText(){
+  if(mode==="blind"){
+    var cCount=Object.keys(found||{}).length;
+    if(cCount===0)return "🙈 تحدي أعمى — خمّن عناصر القائمة لاكتشاف الفكرة!";
+    if(cCount<4)return "🙈 تحدي أعمى ("+cCount+"/10) — وحدة القياس: "+L.unit;
+    return "🙈 تحدي أعمى ("+cCount+"/10) — تلميح: "+L.ask;
+  }
+  var modePrefix=(mode==="multi")?"👥 جماعي — ":(mode==="rush")?"⚡ سباق الوقت — ":"";
+  return modePrefix+L.ask;
+}
+
+function setGameMode(newMode){
+  stopRushTimer();
+  stopBombTimer();
+  stopTimerInterval();
+  closeFriendModal(false);
+
+  if(mode===newMode && newMode!=="normal"){
+    mode="normal";
+    isCluesMode=false;
+    updateSpecialCardsUI();
+    loadCategory(curCat);
+    notify("رجعنا للوضع العادي","العب براحتك على نفس الكاتقوري","info","🎯");
+    return;
+  }
+  mode=newMode;
+  isCluesMode=(newMode==="clues");
+  updateSpecialCardsUI();
+  if(isCluesMode){
+    L=CLUES_DATA;
+    renderTabs();
+    $("ask").textContent=L.ask;
+    $("src").innerHTML="📌 "+L.asof+" • المصادر: "+L.src.map(function(s){return '<a href="'+s[1]+'" target="_blank" rel="noopener">'+s[0]+'</a>'}).join(" ، ");
+    reset();
+    notify("وضع خمّن بالوصف 🕵️‍♂️","اقرأ الوصف تحت كل مركز واكتب الإجابة","info","🕵️‍♂️");
+  }else{
+    loadCategory(curCat);
+    if(newMode==="multi"){
+      notify("وضع اللعب الجماعي 👥","اختر أي كاتقوري فوق وتنافسوا!","info","👥");
+    }else if(newMode==="rush"){
+      notify("سباق الوقت ⚡",rushDuration+" ثانية على الكاتقوري المختار — أسرع!","info","⚡");
+    }else if(newMode==="blind"){
+      notify("التحدي الأعمى 🙈","اسم الكاتقوري مخفي — كل إجابة صح تعطيك +15 XP بونص!","info","🙈");
+    }
+  }
+}
+
+document.querySelector(".special-grid").onclick=function(e){
+  var card=e.target.closest(".mode-card");
+  if(!card)return;
+  setGameMode(card.dataset.mode);
+};
+
+/* قنبلة الدور في اللعب الجماعي */
+function stopBombTimer(){
+  if(bombId){clearInterval(bombId);bombId=null;}
+}
+
+function updateBombUI(){
+  var show=(mode==="multi" && bombEnabled && !over);
+  $("toggle-bomb").classList.toggle("on",bombEnabled);
+  $("toggle-bomb").textContent=bombEnabled?"💣 قنبلة الدور: شغالة":"💣 قنبلة الدور: إيقاف";
+  $("bomb-clock").hidden=!show;
+  if(show){
+    $("bomb-clock").textContent="💣 "+bombSec+"s";
+    $("bomb-clock").classList.toggle("boom",bombSec<=5);
+  }
+}
+
+function startBombTurn(){
+  stopBombTimer();
+  bombSec=bombDuration;
+  updateBombUI();
+  if(mode!=="multi" || !bombEnabled || over)return;
+  bombId=setInterval(function(){
+    if(over || mode!=="multi" || !bombEnabled){stopBombTimer();return;}
+    bombSec--;
+    updateBombUI();
+    if(bombSec<=0){
+      var bomber=pNames[currentTurn];
+      pScores[currentTurn]=Math.max(0,pScores[currentTurn]-10);
+      currentTurn=currentTurn===0?1:0;
+      streak=0;
+      updateStreakUI();
+      updateMultiUI();
+      tone([190,140],"sawtooth");
+      $("msg").textContent="💥 انفجرت القنبلة على "+bomber+" (-10 XP)! الدور الآن لـ "+pNames[currentTurn];
+      notify("انفجرت القنبلة! 💥",bomber+" خسر 10 XP — الدور لـ "+pNames[currentTurn],"bad","💥");
+      bombSec=bombDuration;
+      updateBombUI();
+    }
+  },1000);
+}
+
+$("toggle-bomb").onclick=function(){
+  bombEnabled=!bombEnabled;
+  if(bombEnabled && mode==="multi" && !over){
+    startBombTurn();
+    notify("تشغيل قنبلة الدور 💣",bombDuration+" ثانية لكل دور قبل ما تنفجر!","info","💣");
+  }else{
+    stopBombTimer();
+    updateBombUI();
+    notify("إيقاف قنبلة الدور","تم إيقاف مؤقت الدور","info","💣");
+  }
+};
+
+function updateMultiUI(){
+  var isMulti=(mode==="multi");
+  $("multi-panel").classList.toggle("active",isMulti);
+  updateBombUI();
+  if(!isMulti){
+    stopBombTimer();
+    return;
+  }
+  $("round-label").textContent="🏆 الجولة "+roundNum+" من 3 (الأول لـ 2)";
+  $("p1-label").textContent="🎮 "+pNames[0];
+  $("p2-label").textContent="🎮 "+pNames[1];
+  $("p1-wins").textContent="الجولات: "+pWins[0];
+  $("p2-wins").textContent="الجولات: "+pWins[1];
+  $("p1-score").textContent=pScores[0]+" XP";
+  $("p2-score").textContent=pScores[1]+" XP";
+  $("p1-card").classList.toggle("turn",currentTurn===0);
+  $("p2-card").classList.toggle("turn",currentTurn===1);
+
+  $("pwr-double").textContent="🎯 مخاطرة دبل ("+pDoubleLeft[currentTurn]+")";
+  $("pwr-double").classList.toggle("armed",!!pDoubleArmed[currentTurn]);
+  $("pwr-double").disabled=over || pDoubleLeft[currentTurn]<=0;
+
+  $("pwr-peek").textContent="🔤 كشف حرف ("+pPeekLeft[currentTurn]+")";
+  $("pwr-peek").disabled=over || pPeekLeft[currentTurn]<=0;
+
+  $("call-friend").textContent="📞 استعانة بصديق ("+pFriendLeft[currentTurn]+")";
+  $("call-friend").disabled=over || pFriendLeft[currentTurn]<=0;
+}
+
+$("apply-names").onclick=function(){
+  var n1=$("p1-name").value.trim()||"لاعب 1";
+  var n2=$("p2-name").value.trim()||"لاعب 2";
+  pNames=[n1,n2];
+  updateMultiUI();
+  notify("تم تحديث الأسماء","يلا ابدأوا التحدي بين "+n1+" و"+n2,"info","👥");
+};
+
+$("pwr-double").onclick=function(){
+  if(over || mode!=="multi" || pDoubleLeft[currentTurn]<=0)return;
+  pDoubleArmed[currentTurn]=!pDoubleArmed[currentTurn];
+  updateMultiUI();
+  if(pDoubleArmed[currentTurn]){
+    notify("مخاطرة دبل مفعّلة 🎯","استعمال واحد فقط — صح = ×2 XP | غلط = -15 XP","info","🎯");
+  }
+};
+
+$("pwr-peek").onclick=function(){
+  if(over || mode!=="multi" || pPeekLeft[currentTurn]<=0)return;
+  var hiddenItems=L.items.map(function(it,idx){return {it:it,idx:idx}})
+    .filter(function(o){return found[o.idx]===undefined && !peeks[o.idx]});
+  if(!hiddenItems.length){
+    notify("لا توجد مراكز مخفية جديدة","كل المراكز مكشوفة أو ملمّح لها","info","🔤");
+    return;
+  }
+  var target=hiddenItems[Math.floor(Math.random()*hiddenItems.length)];
+  var chars=target.it[0].trim().slice(0,2);
+  peeks[target.idx]=chars;
+  pPeekLeft[currentTurn]=0;
+  updateMultiUI();
+  render();
+  tone([587.33,783.99],"triangle",0.16);
+  notify("قدرة كشف حرف 🔤","كشفنا «"+chars+"...» في المركز #"+(target.idx+1)+" (انتهى استعمال القدرة)","ok","🔤");
+};
+
+/* بطاقة اتصال استعانة بصديق المربعة (دقيقة واحدة + شعار الهاتف) */
+function stopFriendTimer(){
+  if(friendTimerId){clearInterval(friendTimerId);friendTimerId=null;}
+}
+
+function updateFriendModalUI(){
+  var m=Math.floor(friendSecLeft/60);
+  var s=friendSecLeft%60;
+  var clk=$("friend-clock");
+  clk.textContent=(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+  clk.classList.toggle("urgent",friendSecLeft<=10);
+  var pct=Math.max(0,Math.round((friendSecLeft/60)*100));
+  $("friend-bar-fill").style.width=pct+"%";
+}
+
+function closeFriendModal(focusInput){
+  stopFriendTimer();
+  $("friend-ov").classList.remove("open");
+  if(focusInput!==false && !over)$("q").focus();
+}
+
+function executeFriendAnswer(){
+  var caller=friendCallerTurn;
+  closeFriendModal(false);
+  var hiddenItems=L.items.map(function(it,idx){return {it:it,idx:idx}})
+    .filter(function(o){return found[o.idx]===undefined});
+  if(!hiddenItems.length){
+    if(!over)$("q").focus();
+    return;
+  }
+  var target=hiddenItems[Math.floor(Math.random()*hiddenItems.length)];
+  var ansName=target.it[0];
+  tried[norm(ansName)]=1;
+  found[target.idx]=ansName;
+  pScores[caller]+=15;
+  addXP(15);
+  updateMultiUI();
+  render();
+  tone([523,659,784,987.77],"triangle",0.17);
+
+  var count=Object.keys(found).length;
+  $("msg").textContent="📞 صديقك جاوب: «"+ansName+"» في المركز #"+(target.idx+1)+" (+15 XP)!";
+  notify("فزعة صديق 📞","صديقك جاب لك إجابة صح: «"+ansName+"» (#"+(target.idx+1)+")","ok","📞");
+
+  if(count===L.items.length){
+    over=true;
+    stopRushTimer();
+    stopBombTimer();
+    stopTimerInterval();
+    $("q").disabled=true;
+    if(!isCluesMode){completed[curCat]=1;renderTabs();}
+    var roundNote=recordMultiRoundOutcome();
+    $("msg").textContent="🎉 قفلتم القائمة كاملة بمساعدة الصديق"+roundNote+" ✅";
+  }else{
+    $("q").focus();
+  }
+}
+
+$("call-friend").onclick=function(){
+  if(over || mode!=="multi" || pFriendLeft[currentTurn]<=0)return;
+  var hasHidden=L.items.some(function(_,idx){return found[idx]===undefined});
+  if(!hasHidden)return;
+  friendCallerTurn=currentTurn;
+  pFriendLeft[currentTurn]=0;
+  updateMultiUI();
+
+  friendSecLeft=60;
+  $("friend-title").textContent="📞 اتصال بصديق — "+pNames[friendCallerTurn];
+  $("friend-sub").textContent="دق على خويك أو تشاوروا خلال دقيقة واحدة";
+  updateFriendModalUI();
+  $("friend-ov").classList.add("open");
+  tone([587.33,783.99,987.77],"sine",0.15);
+
+  stopFriendTimer();
+  friendTimerId=setInterval(function(){
+    friendSecLeft--;
+    updateFriendModalUI();
+    if(friendSecLeft<=0){
+      executeFriendAnswer();
+    }
+  },1000);
+};
+
+$("friend-done-self").onclick=function(){
+  closeFriendModal(true);
+  notify("رجعنا للعب ✍️","اكتب الإجابة اللي اتفقتوا عليها في خانة البحث","info","📞");
+};
+
+$("friend-reveal-now").onclick=function(){
+  executeFriendAnswer();
+};
+
+$("reset-series").onclick=function(){
+  closeFriendModal(false);
+  pWins=[0,0];
+  roundNum=1;
+  currentTurn=0;
+  pDoubleLeft=[1,1];
+  pDoubleArmed=[false,false];
+  pPeekLeft=[1,1];
+  pFriendLeft=[1,1];
+  updateMultiUI();
+  reset();
+  notify("تصفير السلسلة","بدأنا سلسلة جولات جديدة ورجعت كل القدرات مرة واحدة","info","🔄");
+};
+
+function stopRushTimer(){
+  if(rushId){clearInterval(rushId);rushId=null;}
+}
+
+function updateRushClockUI(){
+  var el=$("rush-clock");
+  el.textContent=formatClock(rushLeft);
+  el.classList.toggle("danger",rushLeft<=10);
+}
+
+function startRushTimer(){
+  stopRushTimer();
+  rushLeft=rushDuration;
+  updateRushClockUI();
+  rushId=setInterval(function(){
+    if(over){stopRushTimer();return;}
+    rushLeft--;
+    updateRushClockUI();
+    if(rushLeft<=0){
+      rushLeft=0;
+      updateRushClockUI();
+      over=true;
+      stopRushTimer();
+      stopTimerInterval();
+      $("q").disabled=true;
+      $("sug").hidden=true;
+      var count=Object.keys(found).length;
+      if(count>hof.bestRush)hof.bestRush=count;
+      refreshHofUI();
+      $("msg").textContent="⏰ انتهى الوقت! كشفت "+count+" من "+L.items.length+" في سباق الوقت:";
+      notify("انتهى وقت السباق! ⏰","كشفت "+count+" من "+L.items.length+" عناصر","bad","⏰");
+      render();
+    }
+  },1000);
+}
+
+function formatClock(sec){
+  var m=Math.floor(sec/60);
+  var s=sec%60;
+  return (m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+}
+
+function updateTimerUI(){
+  $("timer-btn").textContent=timerEnabled?("⏱️ "+formatClock(elapsedSec)):"⏱️ وقت: إيقاف";
+}
+
+function stopTimerInterval(){
+  if(timerId){clearInterval(timerId);timerId=null;}
+}
+
+function startTimerInterval(){
+  stopTimerInterval();
+  if(!timerEnabled)return;
+  timerId=setInterval(function(){
+    if(!over){
+      elapsedSec++;
+      updateTimerUI();
+    }
+  },1000);
+}
+
+$("timer-btn").onclick=function(){
+  timerEnabled=!timerEnabled;
+  if(timerEnabled){
+    elapsedSec=0;
+    startTimerInterval();
+    notify("بدأ عداد الوقت ⏱️","ورّنا سرعتك في ختم القائمة!","info","⏱️");
+  }else{
+    stopTimerInterval();
+    notify("إيقاف عداد الوقت","العب على راحتك بدون وقت","info","⏱️");
+  }
+  updateTimerUI();
+};
+
+var GROUPS=[
+  ["🕌 إسلاميات",[52,53,54,59,60,61,62]],
+  ["🇸🇦 السعودية",[55,56,57,58]],
+  ["⚡ خفيف وسريع",[27,28,29,30,31,32,33,34,35,36,37,38,39]],
+  ["🎮 ألعاب وترفيه",[0,15,17,16,18,24,25,26,44,45,47,48,49]],
+  ["🌍 دول وسكان",[1,2,8,12,13,9]],
+  ["🏞️ طبيعة وفضاء",[3,5,6,7,14,38]],
+  ["🏙️ مدن ومباني",[4,10,11,43]],
+  ["🍿 أكل وتقنية ومشاهير",[19,20,21,22,23,40,41,42,46,50,51]]
+];
+
+function getCompletedCount(){
+  return Object.keys(completed).filter(function(k){return !!completed[k] && !!DATA[k];}).length;
+}
+
+function deleteCustomCategory(idx){
+  var pos=customIndices.indexOf(idx);
+  if(pos===-1)return;
+  var title=DATA[idx]?DATA[idx].t:"القائمة";
+  customIndices.splice(pos,1);
+  DATA[idx]=null;
+  delete completed[idx];
+  if(curCat===idx){
+    curCat=27;
+    loadCategory(27);
+  }else{
+    renderTabs();
+  }
+  saveState();
+  notify("تم حذف القائمة 🗑️","حذفنا «"+title+"» بنجاح","info","🗑️");
+  appendAiMsg("تم حذف القائمة <b>"+title+"</b> بنجاح! 🗑️","bot");
+}
+
+function deleteAllCustomCategories(){
+  if(!customIndices.length)return 0;
+  var count=customIndices.length;
+  for(var i=0;i<customIndices.length;i++){
+    var idx=customIndices[i];
+    DATA[idx]=null;
+    delete completed[idx];
+  }
+  var hadCur=customIndices.indexOf(curCat)>-1;
+  customIndices=[];
+  if(hadCur){
+    curCat=27;
+    loadCategory(27);
+  }else{
+    renderTabs();
+  }
+  saveState();
+  notify("تم حذف القوائم المخصصة 🗑️","حذفنا "+count+" قوائم بنجاح","info","🗑️");
+  return count;
+}
+
+function renderTabs(){
+  var doneCount=getCompletedCount();
+  var activeTotal=DATA.filter(function(x){return !!x;}).length;
+  var headHtml='<div class="tabs-head">'+
+    '<span class="completed-counter">✅ المختوم: '+doneCount+' / '+activeTotal+' كاتقوري</span>'+
+    '<div class="filter-group">'+
+      '<button type="button" class="filter-btn'+(tabFilter==="all"?" on":"")+'" data-f="all">الكل ('+activeTotal+')</button>'+
+      '<button type="button" class="filter-btn'+(tabFilter==="uncompleted"?" on":"")+'" data-f="uncompleted">غير المختوم</button>'+
+    '</div>'+
+  '</div>';
+
+  var tipHtml='<div class="create-tip-banner">'+
+    '<span>✨ <b>نظام إجابات وبحث:</b> اطلب من المساعد الذكي أي كاتقوري (مثل الدوري الأمريكي) ليُنشأ، يُسجَّل، ويُربط بالبحث فوراً.</span>'+
+    '<button type="button" class="create-tip-btn" id="open-ai-create">🤖 اصنع كاتقوري الآن</button>'+
+  '</div>';
+
+  var sectionsHtml="";
+  if(customIndices.length){
+    var cFiltered=customIndices.filter(function(i){
+      return DATA[i] && (tabFilter==="all" || !completed[i]);
+    });
+    if(cFiltered.length){
+      sectionsHtml+='<div class="gt"><span>✨ قوائم مخصصة / من إنشائك</span></div><div class="cards">'+
+        cFiltered.map(function(i){
+          var cat=DATA[i];
+          var isDone=!!completed[i];
+          var isActive=(!isCluesMode && curCat===i);
+          return '<div class="custom-tab-wrap">'+
+            '<button class="tab'+(isActive?" on":"")+'" data-i="'+i+'">'+cat.t+(isDone?'<span class="done-mark" title="مختوم">✅</span>':'')+'</button>'+
+            '<button type="button" class="del-cat-btn" data-del="'+i+'" title="حذف هذه القائمة">🗑️</button>'+
+          '</div>';
+        }).join("")+'</div>';
+    }
+  }
+
+  var groupsHtml=GROUPS.map(function(g){
+    var filteredIndices=g[1].filter(function(i){
+      return DATA[i] && (tabFilter==="all" || !completed[i]);
+    });
+    if(!filteredIndices.length)return "";
+    return '<div class="gt">'+g[0]+'</div><div class="cards">'+filteredIndices.map(function(i){
+      var t=DATA[i].t,s=t.indexOf(" ");
+      var isDone=!!completed[i];
+      var isActive=(!isCluesMode && curCat===i);
+      return '<button class="tab'+(isActive?" on":"")+'" data-i="'+i+'"><span class="ic">'+t.slice(0,s)+'</span>'+t.slice(s+1)+(isDone?'<span class="done-mark" title="مختوم">✅</span>':'')+'</button>';
+    }).join("")+'</div>';
+  }).join("");
+
+  var combined=sectionsHtml+groupsHtml;
+  if(!combined){
+    combined='<div class="gt">🎉 مبروك! ختمت كل القوائم في هذا القسم، بدّل إلى "الكل" للعب مرة ثانية.</div>';
+  }
+
+  $("tabs").innerHTML=headHtml+tipHtml+combined;
+}
+
+$("tabs").onclick=function(e){
+  if(e.target.id==="open-ai-create"){
+    $("ai-drawer").classList.add("open");
+    var inp=$("ai-input");
+    inp.value="اصنع كاتقوري ";
+    inp.focus();
+    return;
+  }
+  var delBtn=e.target.closest(".del-cat-btn");
+  if(delBtn){
+    deleteCustomCategory(+delBtn.dataset.del);
+    return;
+  }
+  var fb=e.target.closest(".filter-btn");
+  if(fb){
+    tabFilter=fb.dataset.f;
+    renderTabs();
+    return;
+  }
+  var b=e.target.closest(".tab");
+  if(b){
+    var idx=+b.dataset.i;
+    if(!DATA[idx])return;
+    if(isCluesMode){
+      mode="normal";
+      isCluesMode=false;
+      updateSpecialCardsUI();
+    }
+    loadCategory(idx);
+    notify("بدّلنا الكاتقوري","دخلنا على: "+DATA[idx].t,"info","📂");
+  }
+};
+
+function updateStreakUI(){
+  $("streak").textContent="🔥 سلسلة: "+streak;
+  if(streak>hof.bestStreak){
+    hof.bestStreak=streak;
+    refreshHofUI();
+  }
+}
+
+function pulseHearts(){
+  var el=$("hp");
+  el.classList.remove("pulse");
+  void el.offsetWidth;
+  el.classList.add("pulse");
+}
+
+function updateProgressUI(){
+  var total=L.items.length;
+  var count=Object.keys(found).length;
+  var pct=Math.round((count/total)*100);
+  $("prog-label").textContent="التقدم في القائمة: "+count+" / "+total;
+  $("prog-pct").textContent=pct+"%";
+  $("prog-fill").style.width=pct+"%";
+  if(mode==="blind")$("ask").textContent=getCurrentAskText();
+}
+
+function syncAiVaultForCurrentCategory(){
+  if(!L || !Array.isArray(L.items))return;
+  aiAnswerVault[L.t]={
+    title:L.t,
+    answers:L.items.map(function(it,idx){return {rank:idx+1,name:it[0],val:it[1],unit:L.unit}}),
+    decoys:(L.decoys||[]).map(function(d){return d[0]})
+  };
+}
+
+function loadCategory(idx){
+  if(!DATA[idx])idx=27;
+  curCat=idx;
+  L=DATA[idx];
+  syncAiVaultForCurrentCategory();
+  renderTabs();
+  updateSpecialCardsUI();
+  $("ask").textContent=getCurrentAskText();
+  $("src").innerHTML="📌 "+L.asof+" • المصادر: "+L.src.map(function(s){return '<a href="'+s[1]+'" target="_blank" rel="noopener">'+s[0]+'</a>'}).join(" ، ");
+  reset();
+}
+
+function buildSearchPool(){
+  pool=[];
+  var seen={};
+  function addPool(name,kw,rank){
+    var k=norm(name);
+    if(!k || seen[k])return;
+    seen[k]=1;
+    pool.push({
+      name:name,
+      nName:norm(name),
+      kw:norm(kw||""),
+      rank:rank
+    });
+  }
+
+  L.items.forEach(function(it,r){
+    addPool(it[0],it[2],r);
+    if(!isCluesMode && Array.isArray(it[3])){
+      it[3].forEach(function(alt){addPool(alt[0],alt[1],r)});
+    }
+  });
+
+  (L.decoys||[]).forEach(function(d){addPool(d[0],d[1],-1)});
+
+  if(!isCluesMode){
+    if(L.cd===1)COUNTRIES.forEach(function(c){addPool(c[0],c[1],-1)});
+    if(L.cd===2)STATES.forEach(function(s){addPool(s[0],s[1],-1)});
+  }
+}
+
+function reset(){
+  stopRushTimer();
+  stopBombTimer();
+  stopTimerInterval();
+  closeFriendModal(false);
+  found={};tried={};peeks={};lives=5;over=false;streak=0;elapsedSec=0;
+  pScores=[0,0];currentTurn=0;pDoubleArmed=[false,false];
+  updateStreakUI();
+  updateTimerUI();
+  updateMultiUI();
+  $("ask").textContent=getCurrentAskText();
+
+  var isRush=(mode==="rush");
+  $("rush-banner").classList.toggle("active",isRush);
+  if(isRush){
+    startRushTimer();
+  }
+  if(mode==="multi" && bombEnabled){
+    startBombTurn();
+  }
+  if(timerEnabled)startTimerInterval();
+
+  buildSearchPool();
+
+  $("q").value="";
+  $("s-clear").hidden=true;
+  $("q").disabled=false;
+  $("sug").hidden=true;
+  $("msg").textContent="";
+  render();
+}
+
+function render(){
+  $("hp").textContent="❤️".repeat(lives)+"🖤".repeat(5-lives);
+  updateProgressUI();
+  $("out").innerHTML=L.items.map(function(it,r){
+    var isHit=found[r]!==undefined;
+    var cls="row"+(r<3?" top3":"")+(isHit?" hit":(over?" miss":""));
+    var clueHtml=(isCluesMode && it[3])?'<span class="clue-box">'+it[3]+'</span>':"";
+    var peekHtml=(!isHit && !over && peeks[r])?'<span class="peek-tag">يبدأ بـ «'+peeks[r]+'»</span>':"";
+    var label='<span class="blank-slot">•••••••••</span>'+peekHtml+clueHtml;
+    if(isHit){
+      label='<bdi>'+found[r]+'</bdi>'+clueHtml;
+    }else if(over){
+      label='<bdi>'+it[0]+'</bdi>'+clueHtml;
+    }
+    var val=(isHit||over)?'<div class="val">'+fmt(it[1])+'<small>'+L.unit+'</small></div>':'';
+    return '<div class="'+cls+'"><div class="rk">'+(r+1)+'</div><div class="nm">'+label+'</div>'+val+'</div>';
+  }).join("");
+}
+
+var maxSuggestionsCount=7;
+function getMatches(val){
+  var v=norm(val);
+  if(!v||over||!pool)return [];
+  var prefixMatches=[];
+  var wordMatches=[];
+  for(var i=0;i<pool.length;i++){
+    var p=pool[i];
+    if(tried[p.nName])continue;
+    if(p.nName.indexOf(v)===0){
+      prefixMatches.push(p);
+    }else if(p.nName.indexOf(v)>-1 || p.kw.indexOf(v)>-1){
+      wordMatches.push(p);
+    }
+  }
+  return prefixMatches.concat(wordMatches).slice(0,maxSuggestionsCount);
+}
+
+function bindSearchPair(inputEl, sugEl){
+  inputEl.oninput=function(){
+    var rawVal=this.value;
+    $("s-clear").hidden=!rawVal.trim();
+    var v=norm(rawVal);
+    if(v && tried[v] && !over){
+      $("msg").textContent="⚠️ جرّبت هذا الخيار من قبل — اختر شي جديد!";
+    }
+    var res=getMatches(rawVal);
+    if(!res.length){sugEl.hidden=true;return}
+    sugEl.innerHTML=res.map(function(p){
+      return '<button type="button" data-n="'+p.name.replace(/"/g,"&quot;")+'" data-r="'+p.rank+'"><bdi>'+highlightMatch(p.name,rawVal)+'</bdi><span>اختيار ↵</span></button>';
+    }).join("");
+    sugEl.hidden=false;
+  };
+  inputEl.onkeydown=function(e){
+    if(e.key==="Enter"&&!sugEl.hidden){
+      var first=sugEl.querySelector("button");
+      if(first){
+        e.preventDefault();
+        pick(first.dataset.n,+first.dataset.r);
+      }
+    }
+  };
+  sugEl.onclick=function(e){
+    var b=e.target.closest("button");
+    if(b)pick(b.dataset.n,+b.dataset.r);
+  };
+}
+
+bindSearchPair($("q"),$("sug"));
+
+$("s-clear").onclick=function(){
+  $("q").value="";
+  this.hidden=true;
+  $("sug").hidden=true;
+  $("q").focus();
+};
+
+$("focus-search-btn").onclick=function(){
+  $("q").scrollIntoView({behavior:"smooth",block:"center"});
+  setTimeout(function(){$("q").focus();},250);
+};
+
+document.addEventListener("click",function(e){
+  if(!e.target.closest("#main-sbox"))$("sug").hidden=true;
+});
+
+function recordMultiRoundOutcome(){
+  if(mode!=="multi")return "";
+  var winnerIdx=-1;
+  if(pScores[0]>pScores[1])winnerIdx=0;
+  else if(pScores[1]>pScores[0])winnerIdx=1;
+
+  if(winnerIdx>-1){
+    pWins[winnerIdx]++;
+    hof.multiWins++;
+    refreshHofUI();
+    updateMultiUI();
+    if(pWins[winnerIdx]>=2){
+      var champ=pNames[winnerIdx];
+      setTimeout(function(){
+        pWins=[0,0];
+        roundNum=1;
+        pDoubleLeft=[1,1];
+        pPeekLeft=[1,1];
+        pFriendLeft=[1,1];
+        reset();
+        notify("بطل السلسلة! 🏆",champ+" حسم 2 من 3 — بدأنا سلسلة جديدة","ok","🏆");
+      },2400);
+      return " — بطل السلسلة: "+champ+" 👑 (2/3)";
+    }else{
+      roundNum++;
+      updateMultiUI();
+      return " — فوز الجولة لـ "+pNames[winnerIdx]+" (الجولة "+roundNum+" من 3)";
+    }
+  }
+  return " — تعادل في الجولة 🤝";
+}
+
+function pick(name,rank){
+  if(over)return;
+  var nKey=norm(name);
+  if(tried[nKey]){
+    $("msg").textContent="⚠️ «"+name+"» جرّبته من قبل! ما حسبناها خطأ عليك.";
+    notify("مجرّب من قبل","«"+name+"» اخترته سابقاً بدون خصم محاولة","info","⚠️");
+    return;
+  }
+  tried[nKey]=1;
+  $("q").value="";
+  $("s-clear").hidden=true;
+  $("sug").hidden=true;
+
+  var actorTurn=currentTurn;
+  var doubleActive=(mode==="multi" && pDoubleArmed[actorTurn] && pDoubleLeft[actorTurn]>0);
+  if(doubleActive){
+    pDoubleArmed[actorTurn]=false;
+    pDoubleLeft[actorTurn]=0;
+  }
+
+  if(rank>-1 && found[rank]===undefined){
+    found[rank]=name;
+    streak++;
+    updateStreakUI();
+    var topBonus=(rank===0)?15:0;
+    var rushBonus=(mode==="rush")?10:0;
+    var clueBonus=isCluesMode?10:0;
+    var blindBonus=(mode==="blind")?15:0;
+    var gained=20 + (streak > 1 ? (streak - 1) * 5 : 0) + topBonus + rushBonus + clueBonus + blindBonus;
+    if(doubleActive)gained*=2;
+    addXP(gained);
+
+    if(mode==="multi"){
+      pScores[actorTurn]+=gained;
+      if(bombEnabled)startBombTurn();
+      updateMultiUI();
+    }
+    tone([523,659,784]);
+    var count=Object.keys(found).length;
+    var left=L.items.length-count;
+    var actorPrefix=(mode==="multi")?("["+pNames[actorTurn]+"] "):"";
+    var dblTag=doubleActive?" (×2 دبل 🎯 — انتهى استعماله)":"";
+    var blindTag=(mode==="blind")?" (+15 🙈)":"";
+
+    if(count===L.items.length){
+      over=true;
+      stopRushTimer();
+      stopBombTimer();
+      stopTimerInterval();
+      $("q").disabled=true;
+      if(mode==="rush" && count>hof.bestRush)hof.bestRush=count;
+      refreshHofUI();
+      if(!isCluesMode){
+        completed[curCat]=1;
+        renderTabs();
+      }
+      addXP(50);
+      var timeNote=(mode==="rush")?(" وباقي "+rushLeft+" ثانية ⚡"):(timerEnabled?(" خلال "+formatClock(elapsedSec)):"");
+      var roundNote=recordMultiRoundOutcome();
+      $("msg").textContent="🎉 كفو والله! قفلت القائمة ("+L.t+") كاملة"+timeNote+roundNote+" ✅";
+      tone([523,659,784,1046]);
+      notify("قفلتها كاملة! 🏆","ختمت «"+L.t+"»"+timeNote+roundNote,"ok","🏆",true);
+    }else if(rank===0){
+      $("msg").textContent=actorPrefix+"👑 صيد القمة! «"+name+"» في المركز #1"+dblTag+blindTag+" (+15 XP إضافي)";
+      notify("صدت المركز الأول! 👑",actorPrefix+"«"+name+"» في #1"+dblTag+blindTag,"ok","👑",true);
+    }else if(streak>=3){
+      $("msg").textContent=actorPrefix+"🔥 سلسلة نار ("+streak+")! «"+name+"» في المركز #"+(rank+1)+dblTag+blindTag;
+      notify("سلسلة متتالية 🔥"+streak,actorPrefix+"«"+name+"» صح في المركز #"+(rank+1)+dblTag+blindTag,"ok","🔥",true);
+    }else if(left===1){
+      $("msg").textContent=actorPrefix+"⚡ باقي عنصر واحد فقط! «"+name+"» في المركز #"+(rank+1)+dblTag+blindTag;
+      notify("على التكة ⚡",actorPrefix+"باقي عنصر واحد وتختم القائمة!"+dblTag+blindTag,"ok","⚡",true);
+    }else{
+      $("msg").textContent=actorPrefix+"✅ صح! «"+name+"» في المركز #"+(rank+1)+dblTag+blindTag;
+      notify("إجابة صحيحة",actorPrefix+"«"+name+"» في المركز #"+(rank+1)+dblTag+blindTag,"ok","✅",true);
+    }
+  }else{
+    lives--;
+    pulseHearts();
+    streak=0;
+    updateStreakUI();
+    tone([220,180],"sawtooth");
+    $("sbox-inner").classList.remove("shake");
+    void $("sbox-inner").offsetWidth;
+    $("sbox-inner").classList.add("shake");
+
+    var failedActor=(mode==="multi")?pNames[actorTurn]:"";
+    var penaltyNote="";
+    if(mode==="multi"){
+      if(doubleActive){
+        pScores[actorTurn]=Math.max(0,pScores[actorTurn]-15);
+        penaltyNote=" (خسارة مخاطرة الدبل -15 XP وانتهى استعماله!)";
+      }
+      currentTurn=actorTurn===0?1:0;
+      if(bombEnabled && !over)startBombTurn();
+      updateMultiUI();
+    }
+
+    if(lives<=0){
+      lives=0;
+      over=true;
+      stopRushTimer();
+      stopBombTimer();
+      stopTimerInterval();
+      $("q").disabled=true;
+      var revCount=Object.keys(found).length;
+      if(mode==="rush" && revCount>hof.bestRush)hof.bestRush=revCount;
+      refreshHofUI();
+      var roundEndNote=recordMultiRoundOutcome();
+      $("msg").textContent="💥 انتهت المحاولات!"+penaltyNote+roundEndNote+" القائمة كانت («"+L.t+"»):";
+      notify("خلصت المحاولات","القائمة كانت «"+L.t+"» — اضغط إعادة 🔄","bad","💥",true);
+    }else if(lives===1){
+      $("msg").textContent="💔 قلب واحد بس!"+penaltyNote+" ركّز وجبها صح"+(mode==="multi"?(" — الدور الآن لـ "+pNames[currentTurn]):"");
+      notify("آخر فرصة! 💔","باقي لك قلب واحد فقط — ركّز!"+penaltyNote,"bad","💔",true);
+    }else{
+      $("msg").textContent="❌ «"+name+"» مو ضمن القائمة!"+penaltyNote+" باقي لك "+lives+" محاولات"+(mode==="multi"?(" — الدور انتقل من "+failedActor+" إلى "+pNames[currentTurn]):"");
+      notify("مو ضمن القائمة","باقي لك "+lives+" محاولات"+penaltyNote,"bad","❌",true);
+    }
+  }
+  render();
+  if(!over)$("q").focus();
+}
+
+$("rand-cat").onclick=function(){
+  if(isCluesMode){
+    mode="normal";
+    isCluesMode=false;
+    updateSpecialCardsUI();
+  }
+  var valid=DATA.map(function(d,i){return d?i:-1}).filter(function(i){return i>-1});
+  var idx=valid[Math.floor(Math.random()*valid.length)];
+  if(idx===curCat && valid.length>1)idx=valid[(valid.indexOf(idx)+1)%valid.length];
+  loadCategory(idx);
+  addXP(15);
+  notify("قائمة عشوائية 🎲","فتحنا لك «"+DATA[idx].t+"» (+15 XP)","info","🎲");
+};
+
+$("hint").onclick=function(){
+  if(over)return;
+  var hiddenItems=L.items.map(function(it,idx){return {it:it,idx:idx}}).filter(function(o){return found[o.idx]===undefined});
+  if(!hiddenItems.length)return;
+  var target=hiddenItems[Math.floor(Math.random()*hiddenItems.length)];
+  var firstChar=target.it[0].trim().slice(0,2);
+  $("msg").textContent="💡 تلميح لمركز #"+(target.idx+1)+": يبدأ بـ «"+firstChar+"...»";
+  notify("تلميح ذكي 💡","المركز #"+(target.idx+1)+" يبدأ بـ «"+firstChar+"»","info","💡");
+};
+
+$("share-res").onclick=function(){
+  var count=Object.keys(found).length;
+  var total=L.items.length;
+  var info=refreshXPUI();
+  var timeLine=(mode==="rush")?("\n⚡ المتبقي في السباق: "+formatClock(rushLeft)):(timerEnabled?("\n⏱️ الوقت: "+formatClock(elapsedSec)):"");
+  var multiLine=(mode==="multi")?("\n👥 الجولة "+roundNum+"/3: "+pNames[0]+" ("+pScores[0]+" XP | جولات:"+pWins[0]+") ضد "+pNames[1]+" ("+pScores[1]+" XP | جولات:"+pWins[1]+")"):"";
+  var text="🏆 نتيجتي في لعبة توب 10\n👤 اللاعب: "+publicPlayerName+"\n📂 التصنيف: "+(mode==="blind"?"تحدي أعمى 🙈":L.t)+"\n✅ المكشوف: "+count+"/"+total+"\n❤️ المحاولات: "+lives+"/5 | 🔥 السلسلة: "+streak+timeLine+multiLine+"\n👑 اللقب: "+info.rankName+" (مستوى "+info.level+" • "+xp+" XP)\nتقدر تجيب أعلى مني؟";
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){
+      notify("تم نسخ نتيجتك 📋","ارسلها لخوياك وتحداهم!","ok","📋");
+    }).catch(function(){
+      $("msg").textContent="📋 "+text.replace(/\n/g," | ");
+      notify("نتيجتك جاهزة","انسخها من شريط الرسائل","info","📋");
+    });
+  }else{
+    $("msg").textContent="📋 "+text.replace(/\n/g," | ");
+    notify("نتيجتك جاهزة","انسخها من شريط الرسائل","info","📋");
+  }
+};
+
+function revealAllAnswers(){
+  if(over)return;
+  over=true;
+  stopRushTimer();
+  stopBombTimer();
+  stopTimerInterval();
+  closeFriendModal(false);
+  $("q").disabled=true;
+  $("sug").hidden=true;
+  $("msg").textContent="👀 تم كشف جميع الإجابات ("+L.t+"):";
+  notify("كشفنا القائمة","تقدر تضغط إعادة 🔄 لأي جولة جديدة","info","👀");
+  render();
+}
+
+$("giveup").onclick=function(){
+  if(over)return;
+  if(window.__confirmGiveup && !confirm("متأكد تبغى تكشف كل الإجابات وتنهي الجولة؟"))return;
+  revealAllAnswers();
+};
+
+$("again").onclick=function(){
+  reset();
+  notify("جولة جديدة","بدأنا من جديد، بالتوفيق!","info","🔄");
+};
+
+/* قوالب حقيقية متعددة تشمل الدوري الأمريكي، الدوري الفرنسي، السعودية، وغيرها */
+var SPECIAL_CATEGORY_TEMPLATES=[
+  {
+    keys:["الدوري الامريكي","الدوري الأمريكي","امريكي","أمريكي","mls","انتر ميامي","لوس انجلوس"],
+    cat:{
+      t:"🇺🇸 أندية الدوري الأمريكي (MLS)",
+      ask:"أشهر وأبرز أندية الدوري الأمريكي لكرة القدم",
+      unit:"شهرة وتاريخ",
+      asof:"أندية الدوري الأمريكي المعروفة",
+      src:[["MLS","https://www.mlssoccer.com/"],["FIFA","https://www.fifa.com/"]],
+      items:[
+        ["Inter Miami CF",1,"انتر ميامي inter miami"],
+        ["Los Angeles FC",2,"لوس انجلوس اف سي lafc"],
+        ["LA Galaxy",3,"لوس انجلوس غلاكسي جلاكسي la galaxy"],
+        ["Atlanta United",4,"اتلانتا يونايتد atlanta united"],
+        ["Seattle Sounders",5,"سياتل ساوندرز seattle sounders"],
+        ["Columbus Crew",6,"كولومبوس كرو columbus crew"],
+        ["New York City FC",7,"نيويورك سيتي nycfc"],
+        ["FC Cincinnati",8,"سينسيناتي cincinnati"],
+        ["Toronto FC",9,"تورونتو toronto fc"],
+        ["Philadelphia Union",10,"فيلادلفيا يونيون philadelphia union"]
+      ],
+      decoys:[["New York Red Bulls","نيويورك ريد بولز"],["Austin FC","اوستن"],["Orlando City","اورلاندو سيتي"],["DC United","دي سي يونايتد"]]
+    }
+  },
+  {
+    keys:["الدوري الفرنسي","فرنسي","ليج 1","ligue 1","باريس سان جيرمان","مارسيليا","ليون"],
+    cat:{
+      t:"🇫🇷 أندية الدوري الفرنسي",
+      ask:"أشهر وأبرز أندية الدوري الفرنسي (Ligue 1)",
+      unit:"شهرة وتاريخ",
+      asof:"أندية الدوري الفرنسي المعروفة",
+      src:[["Ligue 1","https://ligue1.com/"],["FIFA","https://www.fifa.com/"]],
+      items:[
+        ["Paris Saint-Germain",1,"باريس سان جيرمان psg"],
+        ["Olympique de Marseille",2,"اولمبيك مارسيليا مرسيليا marseille"],
+        ["Olympique Lyonnais",3,"اولمبيك ليون ليون lyon"],
+        ["AS Monaco",4,"موناكو monaco"],
+        ["LOSC Lille",5,"ليل lille"],
+        ["OGC Nice",6,"نيس nice"],
+        ["Stade Rennais",7,"رين rennes"],
+        ["RC Lens",8,"لانس lens"],
+        ["AS Saint-Étienne",9,"سانت اتيان saint etienne"],
+        ["Girondins de Bordeaux",10,"بوردو bordeaux"]
+      ],
+      decoys:[["Montpellier","مونبلييه"],["Toulouse","تولوز"],["Strasbourg","ستراسبورغ"],["FC Nantes","نانت"]]
+    }
+  },
+  {
+    keys:["سعودي","السعوديه","السعودية","المنتخب السعودي","دوري روشن"],
+    cat:{
+      t:"🇸🇦 أبرز معالم وأندية السعودية",
+      ask:"أشهر الأندية والمعالم السعودية المعروفة",
+      unit:"شهرة وتاريخ",
+      asof:"قائمة منسقة من المملكة العربية السعودية",
+      src:[["SAFF","https://www.saff.com.sa/"],["Visit Saudi","https://www.visitsaudi.com/"]],
+      items:[
+        ["الهلال",1,"الهلال السعودي al hilal"],
+        ["النصر",2,"النصر السعودي al nassr"],
+        ["الاتحاد",3,"الاتحاد السعودي al ittihad"],
+        ["الأهلي السعودي",4,"الاهلي السعودي al ahli"],
+        ["الرياض",5,"الرياض riyadh"],
+        ["جدة",6,"جدة jeddah"],
+        ["مكة المكرمة",7,"مكة makkah"],
+        ["المدينة المنورة",8,"المدينة madinah"],
+        ["العلا",9,"العلأ alula"],
+        ["الدرعية",10,"الدرعية diriyah"]
+      ],
+      decoys:[["الشباب","al shabab"],["الفتح","al fateh"],["الخبر","khobar"],["أبها","abha"]]
+    }
+  }
+];
+
+function appendAiMsg(html,who){
+  var box=$("ai-msgs");
+  var div=document.createElement("div");
+  div.className="ai-msg "+who;
+  div.innerHTML=html;
+  box.appendChild(div);
+  box.scrollTop=box.scrollHeight;
+  return div;
+}
+
+$("ai-msgs").onclick=function(e){
+  var delBtn=e.target.closest(".ai-del-inline");
+  if(delBtn){
+    deleteCustomCategory(+delBtn.dataset.delId);
+  }
+};
+
+function getAiHintsForCurrentCategory(){
+  if(!L || !Array.isArray(L.items))return "لا توجد قائمة نشطة حالياً.";
+  var lines=[];
+  for(var i=0;i<L.items.length;i++){
+    var name=L.items[i][0].trim();
+    var isFound=(found && found[i]!==undefined);
+    var firstTwo=name.slice(0,2);
+    var len=name.length;
+    if(isFound){
+      lines.push("#"+(i+1)+": <b>"+name+"</b> (مكشوف ✅)");
+    }else{
+      lines.push("#"+(i+1)+": يبدأ بـ <b>«"+firstTwo+"»</b> — الطول <b>"+len+"</b> أحرف");
+    }
+  }
+  return "<b>💡 هنتات قائمة «"+L.t+"»:</b><br>"+lines.join("<br>");
+}
+
+function getAiVaultSummaryHtml(){
+  syncAiVaultForCurrentCategory();
+  var rec=aiAnswerVault[L.t];
+  if(!rec)return "لا توجد إجابات مسجلة حالياً.";
+  var ansList=rec.answers.map(function(a){
+    return "#"+a.rank+" <b>"+a.name+"</b> ("+fmt(a.val)+" "+a.unit+")";
+  }).join("<br>");
+  var decList=(rec.decoys&&rec.decoys.length)?("<br><b>مموهات البحث:</b> "+rec.decoys.join(" ، ")):"";
+  return "<b>📝 سجل الأجوبة المحفوظ عندي لـ «"+rec.title+"»:</b><br>"+ansList+decList;
+}
+
+function extractTopicName(userText){
+  return userText
+    .replace(/اصنع|سولي|سوي|لي|كاتقوري|كتقري|قائمه|قائمة|عن|سو|ابغى|ابي|صعب|صعبه|جديد|بنفسي|لو سمحت|ياخي|قوله|قولي/gi,"")
+    .replace(/[؟?]/g,"")
+    .trim() || "موضوع متنوع";
+}
+
+function generateDynamicItemsForTopic(topic, isSports){
+  if(isSports){
+    var clubs=[
+      ["نادي الرياض",1,"الرياض riyadh"],
+      ["نادي التعاون",2,"التعاون taawoun"],
+      ["نادي الاتفاق",3,"الاتفاق ettifaq"],
+      ["نادي الفيحاء",4,"الفيحاء fayha"],
+      ["نادي الفتح",5,"الفتح fateh"],
+      ["نادي الرائد",6,"الرائد raed"],
+      ["نادي الشباب",7,"الشباب shabab"],
+      ["نادي الخليج",8,"الخليج khaleej"],
+      ["نادي ضمك",9,"ضمك damac"],
+      ["نادي القادسية",10,"القادسية qadsiah"]
+    ];
+    return {
+      items:clubs,
+      decoys:[["نادي الوحدة","wehda"],["نادي العروبة","oruba"],["نادي الأخدود","okhdood"]]
+    };
+  }
+  var baseNames=[
+    "المجد","الرواد","القمة","الأفق","النجوم","الفرسان","السحاب","الواحة","المنارة","البريق"
+  ];
+  var items=[];
+  for(var i=0;i<10;i++){
+    var label=baseNames[i]+" ("+topic+")";
+    items.push([label, i+1, baseNames[i]+" "+topic+" "+(i+1)]);
+  }
+  return {
+    items:items,
+    decoys:[
+      ["خارج القائمة ("+topic+")",topic+" خارج 1"],
+      ["خيار بديل ("+topic+")",topic+" بديل 2"],
+      ["مموه إضافي ("+topic+")",topic+" مموه 3"]
+    ]
+  };
+}
+
+function buildSmartCategory(userText){
+  var n=norm(userText);
+  var chosen=null;
+  for(var i=0;i<SPECIAL_CATEGORY_TEMPLATES.length;i++){
+    var tpl=SPECIAL_CATEGORY_TEMPLATES[i];
+    for(var j=0;j<tpl.keys.length;j++){
+      if(n.indexOf(norm(tpl.keys[j]))>-1){
+        chosen=JSON.parse(JSON.stringify(tpl.cat));
+        break;
+      }
+    }
+    if(chosen)break;
+  }
+
+  if(!chosen){
+    var topic=extractTopicName(userText);
+    var isSports=(n.indexOf("دوري")>-1 || n.indexOf("كوره")>-1 || n.indexOf("كرة")>-1 || n.indexOf("نادي")>-1 || n.indexOf("انديه")>-1 || n.indexOf("بطوله")>-1);
+    var dyn=generateDynamicItemsForTopic(topic,isSports);
+    chosen={
+      t:(isSports?"⚽ ":"🎯 ")+topic,
+      ask:"أبرز عناصر قائمة: "+topic,
+      unit:"ترتيب",
+      asof:"قائمة مضافة للبحث مع إجابات ومموهات",
+      src:[["Wikipedia","https://www.wikipedia.org/"],["Britannica","https://www.britannica.com/"]],
+      items:dyn.items,
+      decoys:dyn.decoys
+    };
+  }
+
+  var newIdx=DATA.length;
+  DATA.push(chosen);
+  customIndices.push(newIdx);
+  if(isCluesMode){
+    mode="normal";
+    isCluesMode=false;
+    updateSpecialCardsUI();
+  }
+  loadCategory(newIdx);
+  return {title:chosen.t, idx:newIdx, count:chosen.items.length, decoysCount:(chosen.decoys||[]).length};
+}
+
+async function enrichCategoryFromApi(catObj, topicQuery){
+  if(!catObj || !Array.isArray(catObj.items))return;
+  try{
+    var controller=new AbortController();
+    var timer=setTimeout(function(){controller.abort();},1800);
+    var url="https://en.wikipedia.org/w/api.php?action=opensearch&search="+encodeURIComponent(topicQuery)+"&limit=6&namespace=0&format=json&origin=*";
+    var resp=await fetch(url,{signal:controller.signal});
+    clearTimeout(timer);
+    if(!resp.ok)return;
+    var data=await resp.json();
+    if(Array.isArray(data) && Array.isArray(data[1]) && data[1].length){
+      var existing={};
+      catObj.items.forEach(function(it){existing[norm(it[0])]=1;});
+      (catObj.decoys||[]).forEach(function(d){existing[norm(d[0])]=1;});
+      data[1].forEach(function(title){
+        var k=norm(title);
+        if(k && !existing[k] && catObj.decoys && catObj.decoys.length<8){
+          existing[k]=1;
+          catObj.decoys.push([title, title]);
+        }
+      });
+    }
+  }catch(e){}
+}
+
+function answerGeneralQuestion(rawText){
+  var n=norm(rawText);
+
+  if(
+    n==="من انت" || n==="مين انت" || n==="من انتي" || n==="مين انتي" ||
+    n.indexOf("من انت")>-1 || n.indexOf("مين انت")>-1 || n.indexOf("عرف عن نفسك")>-1
+  ){
+    return "<b>السلام عليكم! 👋</b><br>"+
+      "أنا مساعد لعبة <b>توب 10</b> الذكي. أرد على أي سؤال، وأصنع لك أي كاتقوري تبيه (مثل الدوري الأمريكي أو غيره)، وأربطه بنظام البحث مع دعم جلب البيانات عبر API، وأعطيك <b>هنتات</b> وأسجل الإجابات عند الطلب!";
+  }
+
+  if(n.indexOf("السلام")>-1 || n.indexOf("هلا")>-1 || n.indexOf("مرحبا")>-1){
+    return "وعليكم السلام ورحمة الله! أهلاً بك يا غالي، وش تحب نسوي الحين؟ نصنع كاتقوري، نطلع هنتات، ولا نسأل؟";
+  }
+
+  var cleanQ=rawText.replace(/[؟?]/g,"").trim();
+  return "بخصوص سؤالك عن <b>«"+cleanQ+"»</b>: إذا تبغى أضيفه كقائمة لعب في البحث اكتب: <b>«اصنع كاتقوري عن "+cleanQ+"»</b> وسأجهزه لك مع إجاباته ومموهاته وهنتاته.";
+}
+
+function isCategoryCreationRequest(n){
+  var createKeywords=["كاتقوري","كتقري","قائمه","قائمة","اصنع","سولي","سوي","سو","الدوري الامريكي","الدوري الأمريكي","الدوري الفرنسي","سعودي","السعوديه","السعودية"];
+  for(var i=0;i<createKeywords.length;i++){
+    if(n.indexOf(norm(createKeywords[i]))>-1)return true;
+  }
+  return false;
+}
+
+function handleAiPrompt(raw){
+  var text=raw.trim();
+  if(!text)return;
+  appendAiMsg(text,"usr");
+  $("ai-input").value="";
+  var n=norm(text);
+
+  if(n.indexOf("هنت")>-1 || n.indexOf("تلميح")>-1 || n.indexOf("ساعد")>-1){
+    appendAiMsg(getAiHintsForCurrentCategory(),"bot");
+    return;
+  }
+
+  if(n.indexOf("سجل")>-1 || n.indexOf("الاجوبه")>-1 || n.indexOf("الأجوبة")>-1 || n.indexOf("اجوبه")>-1){
+    appendAiMsg(getAiVaultSummaryHtml(),"bot");
+    return;
+  }
+
+  if(n.indexOf("احذف كل")>-1 || n.indexOf("حذف كل")>-1 || n.indexOf("امسح القوائم")>-1){
+    var removedCount=deleteAllCustomCategories();
+    appendAiMsg(removedCount?("تم حذف جميع القوائم المخصصة ("+removedCount+"). 🗑️"):"لا توجد قوائم مخصصة لحذفها حالياً.","bot");
+    return;
+  }
+
+  if(n.indexOf("احذف")>-1 || n.indexOf("حذف")>-1){
+    if(!customIndices.length){
+      appendAiMsg("ما فيه قوائم مخصصة حالياً لحذفها.","bot");
+    }else{
+      var lastIdx=customIndices[customIndices.length-1];
+      deleteCustomCategory(lastIdx);
+    }
+    return;
+  }
+
+  if(isCategoryCreationRequest(n)){
+    var stepMsg=appendAiMsg("🔍 جاري تجهيز الإجابات والمموهات وربطها بنظام البحث...","bot");
+    var res=buildSmartCategory(text);
+    enrichCategoryFromApi(DATA[res.idx], extractTopicName(text)).then(function(){
+      syncAiVaultForCurrentCategory();
+      buildSearchPool();
+      stepMsg.innerHTML=
+        "✅ تم إنشاء الكاتقوري وتسجيل إجاباته وربطه بالبحث!<br>"+
+        "📂 الكاتقوري: <b>"+res.title+"</b> ("+res.count+" إجابات + "+res.decoysCount+" مموهات)<br>"+
+        "اكتب في خانة البحث فوق وستظهر لك النتائج فوراً، أو اطلب مني <b>«هنتات»</b> أو <b>«سجل الأجوبة»</b>! 🎮<br>"+
+        '<button type="button" class="ai-del-inline" data-del-id="'+res.idx+'">🗑️ حذف هذه القائمة</button>';
+      notify("تم إنشاء الكاتقوري ✨","أضفنا «"+res.title+"» للبحث","ok","✨");
+    });
+    return;
+  }
+
+  appendAiMsg(answerGeneralQuestion(text),"bot");
+}
+
+$("ai-fab").onclick=function(){
+  $("ai-drawer").classList.toggle("open");
+  if($("ai-drawer").classList.contains("open"))$("ai-input").focus();
+};
+$("ai-close").onclick=function(){$("ai-drawer").classList.remove("open");};
+$("ai-send").onclick=function(){handleAiPrompt($("ai-input").value);};
+$("ai-input").onkeydown=function(e){if(e.key==="Enter")handleAiPrompt(this.value);};
+document.querySelector(".ai-quick").onclick=function(e){
+  var b=e.target.closest(".ai-qbtn");
+  if(b)handleAiPrompt(b.dataset.prompt);
+};
+
+loadState();
+refreshPublicPlayerUI();
+updateTopButtonsUI();
+refreshXPUI();
+refreshHofUI();
+loadCategory(27);
+
+/* ===== ساحة اللعب الجماعي (.mv) ===== */
+(function(){
+var P=document.getElementById("multi-panel");if(!P)return;
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+var shown=[0,0],tok=[0,0],feed=[],lastTurn=-1;
+var PW=[{id:"pwr-double",ic:"🎯",t:"مخاطرة دبل",d:"×2 لو صح، -15 لو غلط",k:"Alt+1"},
+        {id:"pwr-peek",ic:"🔤",t:"كشف حرف",d:"يكشف أول حرفين من مركز",k:"Alt+2"},
+        {id:"call-friend",ic:"📞",t:"استعانة بصديق",d:"دقيقة اتصال بخويك",k:"Alt+3"}];
+
+function pl(i){return '<div class="mv-pl p'+i+'" id="mv-p'+i+'"><div class="mv-av"></div><div class="mv-nm"></div><div class="mv-star"></div>'+
+  '<div class="mv-sc"><span>0</span><small>XP</small></div><div class="mv-my"></div><div class="mv-bb"><i></i></div><div class="mv-badge">🎤 دورك</div></div>'}
+
+var root=document.createElement("div");root.className="mv";root.id="mv";
+root.innerHTML=
+'<div class="mv-top"><div class="mv-round">🏆 الجولة <b id="mv-rn">1</b> من 3 <span class="mv-pips" id="mv-pips"><i></i><i></i><i></i></span><small style="color:var(--mut)">(الأول لـ 2)</small></div>'+
+'<div class="mv-tools"><button type="button" class="mv-tool" id="mv-bomb">💣 قنبلة الدور</button><button type="button" class="mv-tool" id="mv-nb">✏️ الأسماء</button><button type="button" class="mv-tool" id="mv-rs">🔄 تصفير السلسلة</button></div></div>'+
+'<div class="mv-names" id="mv-names"></div>'+
+'<div class="mv-vs">'+pl(0)+'<div class="mv-mid"><div class="mv-vsb">VS</div><div class="mv-lives" id="mv-lives"></div></div>'+pl(1)+'</div>'+
+'<div class="mv-tug"><i class="a" id="mv-ta" style="width:50%"></i><i class="b" id="mv-tb" style="width:50%"></i></div>'+
+'<div class="mv-pwh" id="mv-pwh"></div>'+
+'<div class="mv-pw">'+PW.map(function(p,i){return '<button type="button" class="mv-pb" id="mv-pb'+i+'" title="'+p.k+'"><span class="n">1</span><span class="ic">'+p.ic+'</span><b>'+p.t+'</b><small>'+p.d+'</small><span class="k">'+p.k+'</span></button>'}).join("")+'</div>'+
+'<div class="mv-feed" id="mv-feed"></div><div class="mv-res" id="mv-res" hidden></div>';
+var ctl=P.querySelector(".multi-controls");
+P.insertBefore(root,P.firstChild);
+if(ctl)document.getElementById("mv-names").appendChild(ctl);
+
+function setScore(i,v){
+  var card=$("mv-p"+i),el=card.querySelector(".mv-sc span"),from=shown[i];
+  if(v===from)return;
+  tok[i]++;var my=tok[i];
+  if(v===0){shown[i]=0;el.textContent="0";return}
+  var d=v-from,t0=performance.now();shown[i]=v;
+  var f=document.createElement("span");f.className="mv-fl "+(d>0?"up":"dn");f.textContent=(d>0?"+":"")+d;
+  card.appendChild(f);setTimeout(function(){if(f.parentNode)f.remove()},1000);
+  (function step(t){if(tok[i]!==my)return;var k=Math.min(1,(t-t0)/450);el.textContent=Math.round(from+d*k);if(k<1)requestAnimationFrame(step)})(t0);
+}
+
+function paintMv(){
+  if(mode!=="multi")return;
+  var t=currentTurn;
+  for(var i=0;i<2;i++){
+    var c=$("mv-p"+i);
+    c.classList.toggle("turn",t===i&&!over);
+    c.querySelector(".mv-av").textContent=(pNames[i].trim().charAt(0)||"؟");
+    c.querySelector(".mv-nm").textContent=pNames[i];
+    c.querySelector(".mv-star").textContent="⭐".repeat(pWins[i])+"☆".repeat(Math.max(0,2-pWins[i]));
+    c.querySelector(".mv-my").innerHTML='<span class="'+(pDoubleLeft[i]>0?"":"z")+'">🎯</span><span class="'+(pPeekLeft[i]>0?"":"z")+'">🔤</span><span class="'+(pFriendLeft[i]>0?"":"z")+'">📞</span>';
+    setScore(i,pScores[i]);
+  }
+  if(t!==lastTurn){lastTurn=t;var cc=$("mv-p"+t);cc.classList.remove("in");void cc.offsetWidth;cc.classList.add("in")}
+  var tot=pScores[0]+pScores[1],a=tot?pScores[0]/tot*100:50;
+  $("mv-ta").style.width=a+"%";$("mv-tb").style.width=(100-a)+"%";
+  $("mv-rn").textContent=roundNum;
+  [].forEach.call($("mv-pips").children,function(e,k){e.className=(k+1<roundNum)?"done":((k+1===roundNum)?"now":"")});
+  $("mv-lives").innerHTML="❤️".repeat(lives)+"🖤".repeat(Math.max(0,5-lives))+"<small>أرواح مشتركة</small>";
+  var b=$("mv-bomb");b.textContent=$("toggle-bomb").textContent;b.classList.toggle("on",!!bombEnabled);
+  var cnt=[pDoubleLeft,pPeekLeft,pFriendLeft];
+  PW.forEach(function(p,k){
+    var btn=$("mv-pb"+k);
+    btn.querySelector(".n").textContent=cnt[k][t];
+    btn.disabled=$(p.id).disabled;
+    btn.classList.toggle("armed",k===0&&!!pDoubleArmed[t]);
+  });
+  $("mv-pwh").textContent="🎒 قدرات "+pNames[t]+(over?"":" (دوره الحين)");
+}
+function paintBomb(){
+  if(mode!=="multi")return;
+  var on=bombEnabled&&!over;
+  for(var i=0;i<2;i++){
+    var bb=$("mv-p"+i).querySelector(".mv-bb");
+    bb.classList.toggle("on",on&&currentTurn===i);
+    bb.classList.toggle("hot",bombSec<=5);
+    bb.querySelector("i").style.width=Math.max(0,bombSec/15*100)+"%";
+  }
+}
+function paintFeed(){$("mv-feed").innerHTML=feed.map(function(e){return '<div class="mv-ev '+e.c+'">'+esc(e.t)+'</div>'}).join("")}
+
+function mvResult(){
+  var r=$("mv-res");
+  if(mode!=="multi"||!over){r.hidden=true;return}
+  var s0=pScores[0],s1=pScores[1],champ=pWins[0]>=2?0:(pWins[1]>=2?1:-1),w=s0>s1?0:(s1>s0?1:-1);
+  var title=champ>-1?"👑 بطل السلسلة: "+pNames[champ]:(w>-1?"🏁 فاز بالجولة: "+pNames[w]:"🤝 تعادل في الجولة");
+  r.innerHTML='<h4>'+esc(title)+'</h4><div style="font-weight:800">'+esc(pNames[0])+' <b>'+s0+'</b> — <b>'+s1+'</b> '+esc(pNames[1])+'</div>'+
+    (champ>-1?'<small style="color:var(--mut)">تبدأ سلسلة جديدة بعد ثواني…</small>':'<button type="button" class="btn" id="mv-next">الجولة التالية ▶️</button>');
+  r.hidden=false;
+}
+
+var _um=updateMultiUI;updateMultiUI=function(){_um();paintMv();paintBomb()};
+var _ub=updateBombUI;updateBombUI=function(){_ub();paintBomb()};
+var _rn=render;render=function(){_rn();mvResult()};
+var _rs=reset;reset=function(){_rs();feed=[];paintFeed();paintMv();paintBomb();mvResult()};
+
+new MutationObserver(function(){
+  if(mode!=="multi")return;
+  var t=$("msg").textContent.trim();if(!t)return;
+  if(feed[0]&&feed[0].t===t)return;
+  feed.unshift({t:t,c:/❌|💔|💥|⏰/.test(t)?"bad":(/✅|🔥|👑|⚡|🎉|📞/.test(t)?"good":"")});
+  feed=feed.slice(0,4);paintFeed();
+}).observe($("msg"),{childList:true,characterData:true,subtree:true});
+
+$("mv-bomb").onclick=function(){$("toggle-bomb").click();paintMv()};
+$("mv-nb").onclick=function(){$("mv-names").classList.toggle("open");this.classList.toggle("on")};
+$("mv-rs").onclick=function(){$("reset-series").click()};
+PW.forEach(function(p,k){$("mv-pb"+k).onclick=function(){$(p.id).click();paintMv()}});
+root.addEventListener("click",function(e){if(e.target.id==="mv-next")$("again").click()});
+
+document.addEventListener("keydown",function(e){
+  if(mode!=="multi"||!e.altKey)return;
+  var m={Digit1:"pwr-double",Digit2:"pwr-peek",Digit3:"call-friend",KeyB:"toggle-bomb"},id=m[e.code];
+  if(!id||(over&&id!=="toggle-bomb"))return;
+  e.preventDefault();$(id).click();paintMv();
+});
+
+paintMv();paintBomb();
+})();
+</script>
+
+<script>
+/* ===== إضافة التحدي اليومي وإعدادات الموقع بالعرض وسهم النزول يسار الشاشة ===== */
+(function(){
+function tokens(s){return norm(s).split(" ").filter(Boolean)}
+buildSearchPool=function(){
+  pool=[];var seen={};
+  function add(name,kw,rank){var k=norm(name);if(!k||seen[k])return;seen[k]=1;pool.push({name:name,nName:k,words:tokens(name+" "+(kw||"")),rank:rank})}
+  L.items.forEach(function(it,r){add(it[0],it[2],r);if(!isCluesMode&&Array.isArray(it[3]))it[3].forEach(function(a){add(a[0],a[1],r)})});
+  (L.decoys||[]).forEach(function(d){add(d[0],d[1],-1)});
+  if(!isCluesMode){
+    if(L.cd===1)COUNTRIES.forEach(function(c){add(c[0],c[1],-1)});
+    if(L.cd===2)STATES.forEach(function(s){add(s[0],s[1],-1)});
+  }
+};
+getMatches=function(val){
+  var q=norm(val);if(!q||over||!pool)return [];
+  var qw=q.split(" ");
+  var out=pool.filter(function(p){
+    if(tried[p.nName])return false;
+    return qw.every(function(w){return p.words.some(function(x){return x.indexOf(w)===0})});
+  });
+  out.sort(function(a,b){
+    var ap=a.nName.indexOf(q)===0?0:1,bp=b.nName.indexOf(q)===0?0:1;
+    return (ap-bp)||a.name.localeCompare(b.name,"ar");
+  });
+  return out.slice(0,maxSuggestionsCount);
+};
+
+var DEFAULT_SITE_PREFS={
+  tab:"look",
+  theme:"default",
+  dark:false,
+  sug:true,
+  cue:true,
+  toast:true,
+  hof:true,
+  sub:true,
+  jumpBtn:true,
+  rowFont:"md",
+  density:"normal",
+  rushSec:60,
+  bombSec:15,
+  sugCount:7,
+  defFilter:"all",
+  reducedMotion:false,
+  confirmGiveup:false,
+  confirmDel:true
+};
+var sitePrefs=Object.assign({},DEFAULT_SITE_PREFS);
+try{var spSite=JSON.parse(localStorage.getItem("top10_public_prefs_v1")||localStorage.getItem("top10_site_prefs_v3")||"null");if(spSite)Object.assign(sitePrefs,spSite)}catch(e){}
+function saveSitePrefs(){try{localStorage.setItem("top10_public_prefs_v1",JSON.stringify(sitePrefs))}catch(e){}}
+
+function updateJumpBtnVisibility(){
+  var btn=$("jump-down-btn");
+  var playSec=$("play-section");
+  if(!btn || !playSec)return;
+  if(!sitePrefs.jumpBtn){
+    btn.classList.remove("show");
+    return;
+  }
+  var rect=playSec.getBoundingClientRect();
+  var shouldShow=(rect.top > 120);
+  btn.classList.toggle("show",shouldShow);
+}
+
+function applySitePrefs(){
+  document.body.classList.toggle("site-dark",!!sitePrefs.dark);
+  document.body.classList.remove("theme-ocean","theme-royal","theme-emerald");
+  if(sitePrefs.theme && sitePrefs.theme!=="default")document.body.classList.add("theme-"+sitePrefs.theme);
+  document.body.classList.toggle("no-sug",!sitePrefs.sug);
+  if($("search-cue-banner"))$("search-cue-banner").style.display=sitePrefs.cue?"flex":"none";
+  document.body.classList.toggle("no-toast",!sitePrefs.toast);
+  document.body.classList.toggle("hide-hof",!sitePrefs.hof);
+  document.body.classList.toggle("hide-sub",!sitePrefs.sub);
+  document.body.classList.toggle("grid-lg",sitePrefs.rowFont==="lg");
+  document.body.classList.toggle("grid-xl",sitePrefs.rowFont==="xl");
+  document.body.classList.toggle("compact-rows",sitePrefs.density==="compact");
+  document.body.classList.toggle("single-col",sitePrefs.density==="1col");
+  document.body.classList.toggle("reduced-motion",!!sitePrefs.reducedMotion);
+
+  maxSuggestionsCount=Number(sitePrefs.sugCount)||7;
+  rushDuration=Number(sitePrefs.rushSec)||60;
+  bombDuration=Number(sitePrefs.bombSec)||15;
+  window.__confirmGiveup=!!sitePrefs.confirmGiveup;
+  window.__confirmDelCustom=!!sitePrefs.confirmDel;
+
+  document.querySelectorAll("#site-tabs-bar [data-stab]").forEach(function(b){
+    var on=(b.dataset.stab===sitePrefs.tab);
+    b.classList.toggle("on",on);
+    var pane=$("stab-"+b.dataset.stab);
+    if(pane)pane.classList.toggle("active",on);
+  });
+
+  document.querySelectorAll("#site-theme-grid [data-theme]").forEach(function(b){
+    b.classList.toggle("on",b.dataset.theme===sitePrefs.theme);
+  });
+  document.querySelectorAll("#site-font-grid [data-rowfont]").forEach(function(b){
+    b.classList.toggle("on",b.dataset.rowfont===sitePrefs.rowFont);
+  });
+  document.querySelectorAll("#site-density-grid [data-density]").forEach(function(b){
+    b.classList.toggle("on",b.dataset.density===sitePrefs.density);
+  });
+  document.querySelectorAll("#site-rush-grid [data-rush]").forEach(function(b){
+    b.classList.toggle("on",Number(b.dataset.rush)===rushDuration);
+  });
+  document.querySelectorAll("#site-bomb-grid [data-bomb]").forEach(function(b){
+    b.classList.toggle("on",Number(b.dataset.bomb)===bombDuration);
+  });
+  document.querySelectorAll("#site-sug-grid [data-sugcnt]").forEach(function(b){
+    b.classList.toggle("on",Number(b.dataset.sugcnt)===maxSuggestionsCount);
+  });
+  document.querySelectorAll("#site-filter-grid [data-defFilter]").forEach(function(b){
+    b.classList.toggle("on",b.dataset.defFilter===sitePrefs.defFilter);
+  });
+
+  if($("ss-dark"))$("ss-dark").checked=!!sitePrefs.dark;
+  if($("ss-hof"))$("ss-hof").checked=!!sitePrefs.hof;
+  if($("ss-sub"))$("ss-sub").checked=!!sitePrefs.sub;
+  if($("ss-jump"))$("ss-jump").checked=!!sitePrefs.jumpBtn;
+  if($("ss-rm"))$("ss-rm").checked=!!sitePrefs.reducedMotion;
+  if($("ss-conf-giveup"))$("ss-conf-giveup").checked=!!sitePrefs.confirmGiveup;
+  if($("ss-conf-del"))$("ss-conf-del").checked=!!sitePrefs.confirmDel;
+  if($("ss-sound-on"))$("ss-sound-on").checked=!muted;
+  if($("ss-sug"))$("ss-sug").checked=!!sitePrefs.sug;
+  if($("ss-cue"))$("ss-cue").checked=!!sitePrefs.cue;
+  if($("ss-toast"))$("ss-toast").checked=!!sitePrefs.toast;
+  if($("ss-auto-bell"))$("ss-auto-bell").checked=!!autoNotify;
+
+  updateJumpBtnVisibility();
+  saveSitePrefs();
+}
+
+window.addEventListener("scroll",updateJumpBtnVisibility,{passive:true});
+window.addEventListener("resize",updateJumpBtnVisibility,{passive:true});
+
+$("jump-down-btn").onclick=function(){
+  $("play-section").scrollIntoView({behavior:"smooth",block:"start"});
+  setTimeout(function(){$("q").focus();},320);
+};
+
+$("site-set-open").onclick=function(){applySitePrefs();$("site-set-ov").classList.add("open")};
+$("site-set-x").onclick=function(){$("site-set-ov").classList.remove("open")};
+$("site-set-ov").onclick=function(e){if(e.target.id==="site-set-ov")$("site-set-ov").classList.remove("open")};
+
+document.querySelectorAll("#site-tabs-bar [data-stab]").forEach(function(b){
+  b.onclick=function(){sitePrefs.tab=b.dataset.stab;applySitePrefs()};
+});
+document.querySelectorAll("#site-theme-grid [data-theme]").forEach(function(b){
+  b.onclick=function(){sitePrefs.theme=b.dataset.theme;applySitePrefs()};
+});
+document.querySelectorAll("#site-font-grid [data-rowfont]").forEach(function(b){
+  b.onclick=function(){sitePrefs.rowFont=b.dataset.rowfont;applySitePrefs()};
+});
+document.querySelectorAll("#site-density-grid [data-density]").forEach(function(b){
+  b.onclick=function(){sitePrefs.density=b.dataset.density;applySitePrefs()};
+});
+document.querySelectorAll("#site-rush-grid [data-rush]").forEach(function(b){
+  b.onclick=function(){
+    sitePrefs.rushSec=Number(b.dataset.rush);
+    rushDuration=sitePrefs.rushSec;
+    if(mode==="rush")rushLeft=rushDuration;
+    updateRushClockUI();
+    applySitePrefs();
+  };
+});
+document.querySelectorAll("#site-bomb-grid [data-bomb]").forEach(function(b){
+  b.onclick=function(){
+    sitePrefs.bombSec=Number(b.dataset.bomb);
+    bombDuration=sitePrefs.bombSec;
+    if(bombEnabled)bombSec=bombDuration;
+    updateBombUI();
+    applySitePrefs();
+  };
+});
+document.querySelectorAll("#site-sug-grid [data-sugcnt]").forEach(function(b){
+  b.onclick=function(){sitePrefs.sugCount=Number(b.dataset.sugcnt);applySitePrefs()};
+});
+document.querySelectorAll("#site-filter-grid [data-defFilter]").forEach(function(b){
+  b.onclick=function(){
+    sitePrefs.defFilter=b.dataset.defFilter;
+    if(sitePrefs.defFilter==="all"||sitePrefs.defFilter==="uncompleted"){
+      tabFilter=sitePrefs.defFilter;
+      renderTabs();
+    }
+    applySitePrefs();
+  };
+});
+
+$("ss-dark").onchange=function(){sitePrefs.dark=this.checked;applySitePrefs()};
+$("ss-hof").onchange=function(){sitePrefs.hof=this.checked;applySitePrefs()};
+$("ss-sub").onchange=function(){sitePrefs.sub=this.checked;applySitePrefs()};
+$("ss-jump").onchange=function(){sitePrefs.jumpBtn=this.checked;applySitePrefs()};
+$("ss-rm").onchange=function(){sitePrefs.reducedMotion=this.checked;applySitePrefs()};
+$("ss-conf-giveup").onchange=function(){sitePrefs.confirmGiveup=this.checked;applySitePrefs()};
+$("ss-conf-del").onchange=function(){sitePrefs.confirmDel=this.checked;applySitePrefs()};
+$("ss-sound-on").onchange=function(){muted=!this.checked;updateTopButtonsUI();saveState();applySitePrefs()};
+$("ss-sug").onchange=function(){sitePrefs.sug=this.checked;if(!this.checked)$("sug").hidden=true;applySitePrefs()};
+$("ss-cue").onchange=function(){sitePrefs.cue=this.checked;applySitePrefs()};
+$("ss-toast").onchange=function(){sitePrefs.toast=this.checked;applySitePrefs()};
+$("ss-auto-bell").onchange=function(){autoNotify=this.checked;updateTopButtonsUI();saveState();applySitePrefs()};
+
+$("ss-reset-ui").onclick=function(){
+  var keepTab=sitePrefs.tab;
+  sitePrefs=Object.assign({},DEFAULT_SITE_PREFS,{tab:keepTab});
+  applySitePrefs();
+  notify("تم ضبط إعدادات الموقع","رجعنا الإعدادات للوضع الافتراضي","info","⚙️");
+};
+
+$("ss-reset-xp").onclick=function(){
+  if(!confirm("متأكد تبغى تصفّر XP والختومات والأرقام القياسية؟"))return;
+  xp=0;streak=0;completed={};
+  hof={bestStreak:0,bestRush:0,multiWins:0};
+  refreshXPUI();refreshStreakUI();refreshHofUI();renderTabs();saveState();
+  notify("تم التصفير","صفرنا XP والختومات بنجاح","info","🧹");
+};
+
+$("ss-export").onclick=function(){
+  var info=refreshXPUI();
+  var summary="توب 10 | اللاعب: "+publicPlayerName+" | المستوى "+info.level+" ("+info.rankName+") | "+xp+" XP | المختوم: "+getCompletedCount()+" | أطول سلسلة: "+hof.bestStreak;
+  if($("ss-io-box"))$("ss-io-box").value=summary;
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(summary).catch(function(){});
+  notify("تم نسخ ملخص التقدم 📋","تقدر تلصقه في أي مكان","ok","📋");
+};
+
+$("ss-export-json").onclick=function(){
+  var payload=JSON.stringify({
+    playerName:publicPlayerName,
+    xp:xp,
+    completed:completed,
+    hof:hof,
+    prefs:sitePrefs
+  });
+  if($("ss-io-box"))$("ss-io-box").value=payload;
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(payload).catch(function(){});
+  notify("تم تصدير كود الحفظ 📦","نُسخ في الصندوق والحافظة","ok","📦");
+};
+
+$("ss-import-json").onclick=function(){
+  var raw=$("ss-io-box")?$("ss-io-box").value.trim():"";
+  if(!raw){notify("الصق كود الحفظ أولاً","اكتب أو الصق كود JSON في المربع","bad","📥");return;}
+  try{
+    var data=JSON.parse(raw);
+    if(data.playerName)publicPlayerName=String(data.playerName).trim()||"مقرن";
+    if(typeof data.xp==="number")xp=data.xp;
+    if(data.completed&&typeof data.completed==="object")completed=data.completed;
+    if(data.hof&&typeof data.hof==="object")hof=Object.assign(hof,data.hof);
+    if(data.prefs&&typeof data.prefs==="object")Object.assign(sitePrefs,data.prefs);
+    refreshPublicPlayerUI();refreshXPUI();refreshHofUI();renderTabs();applySitePrefs();saveState();
+    notify("تم استيراد الحفظ بنجاح ✅","رجعنا بياناتك وإعداداتك","ok","📥");
+  }catch(e){
+    notify("كود الحفظ غير صالح","تأكد من لصق كود الحفظ كاملاً","bad","❌");
+  }
+};
+
+var _origDelCustom=deleteCustomCategory;
+deleteCustomCategory=function(idx){
+  if(window.__confirmDelCustom && !confirm("متأكد تبغى تحذف هذه القائمة المخصصة؟"))return;
+  _origDelCustom(idx);
+};
+
+/* التحدي اليومي */
+var DAYS=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+var MILESTONES=[
+  {id:"m1",t:"اجمع 3 إجابات في تحدي اليوم",n:3,xp:30},
+  {id:"m2",t:"اجمع 7 إجابات في تحدي اليوم",n:7,xp:70},
+  {id:"m3",t:"أكمل قائمة اليوم (10/10)",n:10,xp:120}
+];
+function todayKey(){
+  var d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function seedFromKey(k){
+  var h=2166136261;
+  for(var i=0;i<k.length;i++){h^=k.charCodeAt(i);h=Math.imul(h,16777619)}
+  return h>>>0;
+}
+function dailyCatIndex(){
+  var valid=DATA.map(function(d,i){return d?i:-1}).filter(function(i){return i>-1});
+  return valid[seedFromKey(todayKey())%valid.length];
+}
+function yesterdayKey(){
+  var d=new Date(Date.now()-86400000);
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+
+var D={
+  streak:0,lastDay:"",totalDone:0,
+  day:todayKey(),cat:dailyCatIndex(),
+  hits:[],done:false,claimed:{},
+  grid:"⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜"
+};
+var D_KEY="top10_public_daily_v1";
+try{var sv=JSON.parse(localStorage.getItem(D_KEY)||localStorage.getItem("top10_daily_v1")||"null");if(sv)Object.assign(D,sv)}catch(e){}
+function rollDayIfNeeded(){
+  var tk=todayKey();
+  if(D.day===tk)return;
+  if(D.done&&D.day!==yesterdayKey())D.streak=0;
+  D.day=tk;D.cat=dailyCatIndex();D.hits=[];D.done=false;D.claimed={};D.grid="⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜";
+  saveD();
+}
+function saveD(){try{localStorage.setItem(D_KEY,JSON.stringify(D))}catch(e){}}
+rollDayIfNeeded();
+
+var topCtr=document.querySelector(".top-controls");
+var dBtn=document.createElement("button");
+dBtn.className="ib";dBtn.id="dly-open";dBtn.title="تحدي اليوم";
+dBtn.innerHTML='📅<span class="dly-dot" id="dly-dot"></span>';
+if(topCtr)topCtr.insertBefore(dBtn,topCtr.firstChild);
+
+var ov=document.createElement("div");
+ov.className="dly-ov";ov.id="dly-ov";
+ov.innerHTML='<div class="dly-card">'+
+  '<div class="dly-h"><span>📅 تحدي اليوم</span><button type="button" class="dly-x" id="dly-x">✕</button></div>'+
+  '<div class="dly-tiles">'+
+    '<div class="dly-tile"><b id="d-st">0</b><small>🔥 أيام متتالية</small></div>'+
+    '<div class="dly-tile"><b id="d-to">0</b><small>🏆 أيام مكتملة</small></div>'+
+    '<div class="dly-tile"><b id="d-dy">-</b><small id="d-dt">-</small></div>'+
+  '</div>'+
+  '<div class="dly-main">'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span id="d-cn">-</span><span id="d-pr">0/10</span></div>'+
+    '<div class="dly-grid" id="d-gr"></div>'+
+    '<button type="button" class="btn" id="d-go">العب تحدي اليوم ▶️</button>'+
+  '</div>'+
+  '<div class="dly-ms" id="d-ms"></div>'+
+  '<div class="dly-cd" id="d-cd"></div>'+
+'</div>';
+document.body.appendChild(ov);
+
+function isDailyPlay(){return !isCluesMode && curCat===D.cat}
+function updateDot(){
+  rollDayIfNeeded();
+  var hasUnclaimed=MILESTONES.some(function(m){return D.hits.length>=m.n&&!D.claimed[m.id]});
+  $("dly-dot").style.display=(!D.done||hasUnclaimed)?"block":"none";
+}
+function renderDly(){
+  rollDayIfNeeded();
+  var now=new Date();
+  $("d-st").textContent=D.streak;$("d-to").textContent=D.totalDone;
+  $("d-dy").textContent=DAYS[now.getDay()];$("d-dt").textContent=D.day;
+  $("d-cn").textContent=(DATA[D.cat]?DATA[D.cat].t:"قائمة اليوم");$("d-pr").textContent=D.hits.length+"/10";
+  $("d-gr").textContent=D.grid;
+  $("d-go").textContent=D.done?"✅ مكتمل — العب مرة ثانية":"العب تحدي اليوم ▶️";
+  $("d-ms").innerHTML=MILESTONES.map(function(m){
+    var c=D.hits.length,ok=c>=m.n,pct=Math.min(100,Math.round(c/m.n*100));
+    return '<div class="dly-m'+(ok?" done":"")+'"><div style="display:flex;justify-content:space-between"><span>'+(ok?"✅":"🎯")+' '+m.t+'</span><span>+'+m.xp+' XP</span></div><div class="tr"><i style="width:'+pct+'%"></i></div></div>';
+  }).join("");
+  var rem=Math.max(0,new Date(now.getFullYear(),now.getMonth(),now.getDate()+1)-now);
+  var h=String(Math.floor(rem/36e5)).padStart(2,"0"),m=String(Math.floor(rem%36e5/6e4)).padStart(2,"0"),s=String(Math.floor(rem%6e4/1e3)).padStart(2,"0");
+  $("d-cd").textContent="⏳ يتجدد التحدي بعد "+h+":"+m+":"+s;
+  updateDot();
+}
+
+dBtn.onclick=function(){renderDly();ov.classList.add("open")};
+$("dly-x").onclick=function(){ov.classList.remove("open")};
+ov.onclick=function(e){if(e.target===ov)ov.classList.remove("open")};
+$("d-go").onclick=function(){
+  rollDayIfNeeded();ov.classList.remove("open");
+  if(isCluesMode){mode="normal";isCluesMode=false;updateSpecialCardsUI()}
+  loadCategory(D.cat);
+  if(D.hits.length&&D.hits.length<10){
+    D.hits.forEach(function(r){if(L.items[r]){found[r]=L.items[r][0];tried[norm(L.items[r][0])]=1}});
+    render();$("msg").textContent="📅 استكملنا تقدمك في تحدي اليوم ("+D.hits.length+"/10)!";
+  }
+  notify("تحدي اليوم 📅","إجاباتك هنا تنحسب في تحدي اليوم تلقائياً","info","📅");
+};
+
+$("ss-reset-daily").onclick=function(){
+  if(!confirm("متأكد تبغى تصفّر بيانات التحدي اليومي؟"))return;
+  D={streak:0,lastDay:"",totalDone:0,day:todayKey(),cat:dailyCatIndex(),hits:[],done:false,claimed:{},grid:"⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜"};
+  saveD();renderDly();
+  notify("تم تصفير التحدي اليومي","بدأنا تحدي اليوم من جديد","info","🗓️");
+};
+
+var _pick=pick;
+pick=function(name,rank){
+  var prevLives=lives;
+  _pick(name,rank);
+  if(!isDailyPlay())return;
+  rollDayIfNeeded();
+  if(rank>-1&&D.hits.indexOf(rank)===-1){
+    D.hits.push(rank);
+    var g=D.grid.split("");g[rank]="🟩";D.grid=g.join("");
+  }else if(rank===-1&&lives<prevLives){
+    var idx=D.hits.length;
+    if(idx<10){var g2=D.grid.split("");if(g2[idx]==="⬜")g2[idx]="🟥";D.grid=g2.join("")}
+  }
+  MILESTONES.forEach(function(m){
+    if(D.hits.length>=m.n&&!D.claimed[m.id]){
+      D.claimed[m.id]=1;addXP(m.xp);
+      notify("إنجاز التحدي اليومي! 🎯",m.t+" (+"+m.xp+" XP)","ok","🎯");
+    }
+  });
+  if(D.hits.length===10&&!D.done){
+    D.done=true;D.totalDone++;
+    D.streak=(D.lastDay===yesterdayKey())?(D.streak+1):1;
+    D.lastDay=todayKey();
+    notify("ختمت تحدي اليوم! 📅","سلسلة الأيام المتتالية: "+D.streak+" 🔥","ok","📅");
+  }
+  saveD();updateDot();
+};
+
+var _render=render;
+render=function(){_render();updateDot()};
+setInterval(function(){if(ov.classList.contains("open"))renderDly();else updateDot()},1000);
+applySitePrefs();
+updateDot();
+})();
+</script>
+
+<script>
+/* ===== تطوير المساعد الذكي + زر إعدادات الترس ⚙️ داخل نافذة المساعد ===== */
+(function(){
+var drawer=$("ai-drawer"), msgs=$("ai-msgs"), inp=$("ai-input"), sendBtn=$("ai-send");
+var head=drawer&&drawer.querySelector(".ai-head"), closeBtn=$("ai-close");
+if(!drawer||!msgs||!inp||!sendBtn||!head)return;
+
+var KEY_STORE="top10_ai_gemini_key_v1";
+var GEAR_STORE="top10_ai_gear_v1";
+var DEFAULT_GEAR={bg:"default",font:"md",showQuick:true,enterSend:true};
+var gear=Object.assign({},DEFAULT_GEAR);
+try{var gSaved=JSON.parse(localStorage.getItem(GEAR_STORE)||"null");if(gSaved)Object.assign(gear,gSaved)}catch(e){}
+function saveGear(){try{localStorage.setItem(GEAR_STORE,JSON.stringify(gear))}catch(e){}}
+
+function applyGear(){
+  msgs.classList.remove("ai-bg-warm","ai-bg-mint","ai-bg-dots","ai-bg-dark");
+  if(gear.bg && gear.bg!=="default")msgs.classList.add("ai-bg-"+gear.bg);
+  drawer.classList.remove("ai-fs-sm","ai-fs-lg");
+  if(gear.font==="sm")drawer.classList.add("ai-fs-sm");
+  if(gear.font==="lg")drawer.classList.add("ai-fs-lg");
+  drawer.classList.toggle("ai-hide-quick",!gear.showQuick);
+
+  document.querySelectorAll("#ai-bg-grid [data-aibg]").forEach(function(b){
+    b.classList.toggle("on",b.dataset.aibg===gear.bg);
+  });
+  document.querySelectorAll("#ai-font-row [data-aifont]").forEach(function(b){
+    b.classList.toggle("on",b.dataset.aifont===gear.font);
+  });
+  var qSw=$("ai-sw-quick");if(qSw)qSw.checked=!!gear.showQuick;
+  var eSw=$("ai-sw-enter");if(eSw)eSw.checked=!!gear.enterSend;
+  saveGear();
+}
+
+head.innerHTML='<div class="ai-title"><span>🤖 مساعد توب 10 الذكي</span><small id="ai-st">جاهز • صنع قوائم + بحث + أسئلة</small></div>'+
+  '<div><button type="button" class="ai-gear" id="ai-gear" title="إعدادات المساعد">⚙️</button>'+
+  '<button type="button" class="ai-close" id="ai-close" title="إغلاق">✕</button></div>';
+closeBtn=$("ai-close");
+
+var keyBox=document.createElement("div");keyBox.className="ai-key";keyBox.id="ai-key";keyBox.hidden=true;
+keyBox.innerHTML='<div>ربط Gemini (اختياري — بدون مفتاح يرد فوراً محلياً)</div>'+
+  '<div class="ai-key-row"><input type="password" id="ai-key-in" placeholder="AIza..."><button type="button" id="ai-key-save">حفظ</button><button type="button" class="d" id="ai-key-del">مسح</button></div>'+
+  '<div class="ai-gear-sec">'+
+    '<span class="ai-gear-lbl">🎨 خلفية المحادثة</span>'+
+    '<div class="ai-bg-grid" id="ai-bg-grid">'+
+      '<button type="button" class="ai-chip-btn" data-aibg="default">افتراضي</button>'+
+      '<button type="button" class="ai-chip-btn" data-aibg="warm">دافئ</button>'+
+      '<button type="button" class="ai-chip-btn" data-aibg="mint">نعناعي</button>'+
+      '<button type="button" class="ai-chip-btn" data-aibg="dots">منقط</button>'+
+      '<button type="button" class="ai-chip-btn" data-aibg="dark">داكن</button>'+
+    '</div>'+
+    '<span class="ai-gear-lbl" style="margin-top:8px">🔤 حجم خط الرسائل</span>'+
+    '<div class="ai-font-row" id="ai-font-row">'+
+      '<button type="button" class="ai-chip-btn" data-aifont="sm">صغير</button>'+
+      '<button type="button" class="ai-chip-btn" data-aifont="md">متوسط</button>'+
+      '<button type="button" class="ai-chip-btn" data-aifont="lg">كبير</button>'+
+    '</div>'+
+    '<label class="ai-sw-row"><span>⚡ إظهار أزرار الاقتراحات السريعة</span><input type="checkbox" id="ai-sw-quick"></label>'+
+    '<label class="ai-sw-row"><span>↵ إرسال الرسالة بزر Enter</span><input type="checkbox" id="ai-sw-enter"></label>'+
+    '<div class="ai-gear-foot">'+
+      '<button type="button" class="ai-mini-act" id="ai-clear-chat">🧹 مسح المحادثة</button>'+
+      '<button type="button" class="ai-mini-act" id="ai-reset-gear">↩️ ضبط الإعدادات</button>'+
+    '</div>'+
+  '</div>';
+head.after(keyBox);
+
+var ta=document.createElement("textarea");ta.id="ai-input";ta.rows=1;ta.placeholder=inp.placeholder;
+inp.replaceWith(ta);inp=ta;
+
+function autoGrow(){inp.style.height="auto";inp.style.height=Math.min(inp.scrollHeight,110)+"px"}
+inp.addEventListener("input",autoGrow);
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function fmtText(s){
+  if(/<\/?[a-z][\s\S]*>/i.test(s))return s;
+  return esc(s)
+    .replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")
+    .replace(/`([^`\n]+)`/g,"<code>$1</code>")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g,'$1<a href="$2" target="_blank" rel="noopener">$2</a>')
+    .replace(/\n/g,"<br>");
+}
+
+var history=[];
+function addBubble(who,html){
+  var row=document.createElement("div");row.className="ai-row "+who;
+  var av=document.createElement("div");av.className="ai-av";av.textContent=who==="bot"?"🤖":"😎";
+  var b=document.createElement("div");b.className="ai-msg "+who;b.innerHTML=html;
+  if(who==="bot")row.append(b,av);else row.append(av,b);
+  msgs.appendChild(row);msgs.scrollTop=msgs.scrollHeight;
+  return b;
+}
+
+msgs.innerHTML="";
+addBubble("bot","هلا بك! 👋 أرد على أي سؤال، وأصنع لك أي كاتقوري تبيه (مثل الدوري الأمريكي أو غيره)، وأربطه بالبحث مع دعم API، وأعطيك <b>هنتات</b> وأسجل الإجابات عند الطلب.");
+
+appendAiMsg=function(html,who){return addBubble(who==="usr"?"usr":"bot",fmtText(html))};
+
+function showTyping(){
+  return addBubble("bot",'<span class="ai-dots"><i></i><i></i><i></i></span>');
+}
+
+function getKey(){try{return(localStorage.getItem(KEY_STORE)||"").trim()}catch(e){return""}}
+function setKey(k){try{if(k)localStorage.setItem(KEY_STORE,k);else localStorage.removeItem(KEY_STORE)}catch(e){}}
+function refreshKeyUI(){
+  var has=!!getKey();
+  $("ai-st").textContent=has?"متصل بـ Gemini • بحث وقوائم ذكية":"جاهز • صنع قوائم + بحث + أسئلة";
+  $("ai-gear").style.background=has?"rgba(255,255,255,.34)":"rgba(255,255,255,.2)";
+}
+
+$("ai-gear").onclick=function(){
+  keyBox.hidden=!keyBox.hidden;
+  if(!keyBox.hidden){
+    $("ai-key-in").value=getKey();
+    applyGear();
+    $("ai-key-in").focus();
+  }
+};
+$("ai-key-save").onclick=function(){setKey($("ai-key-in").value.trim());refreshKeyUI();keyBox.hidden=true};
+$("ai-key-del").onclick=function(){$("ai-key-in").value="";setKey("");refreshKeyUI()};
+
+document.querySelectorAll("#ai-bg-grid [data-aibg]").forEach(function(b){
+  b.onclick=function(){gear.bg=b.dataset.aibg;applyGear()};
+});
+document.querySelectorAll("#ai-font-row [data-aifont]").forEach(function(b){
+  b.onclick=function(){gear.font=b.dataset.aifont;applyGear()};
+});
+$("ai-sw-quick").onchange=function(){gear.showQuick=this.checked;applyGear()};
+$("ai-sw-enter").onchange=function(){gear.enterSend=this.checked;applyGear()};
+
+$("ai-clear-chat").onclick=function(){
+  history=[];
+  msgs.innerHTML="";
+  addBubble("bot","تم مسح المحادثة 🧹 — وش تحب نسأل أو نصنع الحين؟");
+};
+
+$("ai-reset-gear").onclick=function(){
+  gear=Object.assign({},DEFAULT_GEAR);
+  applyGear();
+  notify("تم ضبط إعدادات المساعد","رجعنا ألوان وحجم خط المساعد للوضع الافتراضي","info","⚙️");
+};
+
+function callGemini(prompt){
+  var key=getKey();
+  if(!key)return Promise.resolve(null);
+  var sys="أنت مساعد لعبة «توب 10» العربية. أجب بالعربية بوضوح وبأسلوب ودي ومختصر. القائمة الحالية: «"+(L?L.t:"")+"».";
+  var contents=history.slice(-8).concat([{role:"user",parts:[{text:prompt}]}]);
+  return fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key="+encodeURIComponent(key),{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({systemInstruction:{parts:[{text:sys}]},contents:contents})
+  }).then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error((d.error&&d.error.message)||r.status);return d})})
+    .then(function(d){
+      var parts=d.candidates&&d.candidates[0]&&d.candidates[0].content&&d.candidates[0].content.parts;
+      var txt=(parts||[]).map(function(p){return p.text||""}).join("").trim();
+      if(!txt)throw new Error("رد فارغ");
+      history.push({role:"user",parts:[{text:prompt}]},{role:"model",parts:[{text:txt}]});
+      return txt;
+    });
+}
+
+handleAiPrompt=function(raw){
+  var text=(raw||"").trim();if(!text)return;
+  addBubble("usr",fmtText(text));
+  inp.value="";autoGrow();
+  var n=norm(text);
+
+  if(n.indexOf("هنت")>-1||n.indexOf("تلميح")>-1||n.indexOf("ساعد")>-1){addBubble("bot",getAiHintsForCurrentCategory());return}
+  if(n.indexOf("سجل")>-1||n.indexOf("الاجوبه")>-1||n.indexOf("الأجوبة")>-1||n.indexOf("اجوبه")>-1){addBubble("bot",getAiVaultSummaryHtml());return}
+  if(n.indexOf("احذف كل")>-1||n.indexOf("حذف كل")>-1||n.indexOf("امسح القوائم")>-1){
+    var c=deleteAllCustomCategories();
+    addBubble("bot",c?"تم حذف جميع القوائم المخصصة ("+c+"). 🗑️":"لا توجد قوائم مخصصة لحذفها حالياً.");
+    return;
+  }
+  if(n.indexOf("احذف")>-1||n.indexOf("حذف")>-1){
+    if(!customIndices.length)addBubble("bot","ما فيه قوائم مخصصة حالياً لحذفها.");
+    else deleteCustomCategory(customIndices[customIndices.length-1]);
+    return;
+  }
+  if(isCategoryCreationRequest(n)){
+    var typingCat=showTyping();
+    var res=buildSmartCategory(text);
+    enrichCategoryFromApi(DATA[res.idx],extractTopicName(text)).then(function(){
+      syncAiVaultForCurrentCategory();buildSearchPool();
+      typingCat.innerHTML=fmtText("✅ تم إنشاء الكاتقوري وتسجيل إجاباته وربطه بالبحث!\n📂 الكاتقوري: "+res.title+" ("+res.count+" إجابات + "+res.decoysCount+" مموهات)\nاكتب في خانة البحث فوق وستظهر لك النتائج فوراً، أو اطلب مني «هنتات» أو «سجل الأجوبة»! 🎮")+
+        '<br><button type="button" class="ai-del-inline" data-del-id="'+res.idx+'">🗑️ حذف هذه القائمة</button>';
+      notify("تم إنشاء الكاتقوري ✨","أضفنا «"+res.title+"» للبحث","ok","✨");
+    });
+    return;
+  }
+
+  var typing=showTyping();
+  callGemini(text).then(function(reply){
+    if(reply){typing.innerHTML=fmtText(reply);return}
+    typing.innerHTML=fmtText(answerGeneralQuestion(text));
+  }).catch(function(err){
+    typing.innerHTML=fmtText(answerGeneralQuestion(text)+"\n(ملاحظة Gemini: "+err.message+")");
+  });
+};
+
+sendBtn.onclick=function(){handleAiPrompt(inp.value)};
+inp.onkeydown=function(e){if(e.key==="Enter"&&!e.shiftKey&&gear.enterSend){e.preventDefault();handleAiPrompt(inp.value)}};
+closeBtn.onclick=function(){drawer.classList.remove("open")};
+$("ai-fab").onclick=function(){drawer.classList.toggle("open");if(drawer.classList.contains("open"))inp.focus()};
+applyGear();
+refreshKeyUI();
+})();
+</script>
+</body>
+</html>
